@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { authController } from '../controllers';
+import { useAuthStore } from '../store/authStore';
 import '../styles/style-login.css';
 
 function SignupPage() {
@@ -9,13 +11,73 @@ function SignupPage() {
   const [otp, setOtp] = useState('');
   const [promoCode, setPromoCode] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [otpStatus, setOtpStatus] = useState('');
+  const [userCheckStatus, setUserCheckStatus] = useState('');
+  
   const navigate = useNavigate();
+  const loginAction = useAuthStore((state) => state.login);
 
-  const handleSignup = (e) => {
+  const checkUsernameAvailability = async () => {
+    if (!username.trim()) return;
+    try {
+      const resp = await authController.checkUsername(username);
+      setUserCheckStatus(resp.msg || (resp.error === '0' ? 'Available' : 'Taken'));
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  const handleSendOtp = async () => {
+    if (!mobile.trim()) { alert('Please enter mobile number'); return; }
+    try {
+      setLoading(true);
+      const resp = await authController.sendOtp(mobile);
+      if (resp.error === '0') {
+        alert(resp.msg || 'OTP Sent Successfully');
+        setOtpStatus('OTP Sent');
+      } else {
+        alert(resp.msg || 'Failed to send OTP');
+      }
+    } catch (err) {
+      console.error(err);
+      alert('Error sending OTP');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleSignup = async (e) => {
     e.preventDefault();
-    alert('Signup Successful (Demo)!');
-    // In a real app we'd redirect to login or dashboard
-    navigate('/login');
+    try {
+      setLoading(true);
+      const data = {
+        username,
+        password,
+        mobile,
+        otp
+      };
+      
+      const response = await authController.createUser(data);
+
+      if (response.error === '0') {
+        alert(response.msg || 'Signup Successful!');
+        // Ideally the createuser response contains a token, if so we login directly
+        if (response.apitoken || response.LoginToken) {
+            loginAction(response.username || username, response.apitoken || response.LoginToken);
+            navigate('/');
+        } else {
+            navigate('/login');
+        }
+      } else {
+        alert(response.msg || 'Signup failed');
+      }
+    } catch (err) {
+      console.error('Signup Error:', err);
+      alert('An unexpected error occurred during signup.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -38,14 +100,33 @@ function SignupPage() {
         {/* Signup Form */}
         <main className="content-section">
           <form className="login-form" onSubmit={handleSignup}>
-            <input
-              type="text"
-              placeholder="Username"
-              className="form-input"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-              required
-            />
+            <div className="validation-input-wrapper">
+              <input
+                type="text"
+                placeholder="Username"
+                className="form-input"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                onBlur={checkUsernameAvailability}
+                required
+              />
+              <button
+                type="button"
+                onClick={checkUsernameAvailability}
+                className="captcha-code"
+                style={{
+                  background: '#ff7a00', color: '#fff', border: 'none', borderRadius: '4px', padding: '0 10px', height: '30px', marginTop: '5px'
+                }}
+              >
+                Check
+              </button>
+            </div>
+
+            {userCheckStatus && (
+              <p style={{ fontSize: '10px', color: userCheckStatus === 'Available' ? 'green' : 'red', marginTop: '-15px', marginBottom: '10px' }}>
+                {userCheckStatus}
+              </p>
+            )}
 
             <div className="validation-input-wrapper">
               <input
@@ -77,14 +158,28 @@ function SignupPage() {
               (Must be contained alphanumeric and more than 6 letters)
             </p>
 
-            <input
-              type="text"
-              placeholder="Mobile No."
-              className="form-input"
-              value={mobile}
-              onChange={(e) => setMobile(e.target.value)}
-              required
-            />
+            <div className="validation-input-wrapper">
+              <input
+                type="text"
+                placeholder="Mobile No."
+                className="form-input"
+                value={mobile}
+                onChange={(e) => setMobile(e.target.value)}
+                required
+              />
+              <button
+                type="button"
+                onClick={handleSendOtp}
+                className="captcha-code"
+                disabled={loading}
+                style={{
+                  background: '#28a745', color: '#fff', border: 'none', borderRadius: '4px', padding: '0 8px', height: '30px', marginTop: '5px', fontSize: '11px'
+                }}
+              >
+                {otpStatus || 'Send OTP'}
+              </button>
+            </div>
+
             <input
               type="text"
               placeholder="One Time Password (OTP)"
@@ -102,7 +197,9 @@ function SignupPage() {
             />
 
             {/* Button row */}
-            <button type="submit" className="login-btn">Signup</button>
+            <button type="submit" className="login-btn" disabled={loading}>
+              {loading ? 'Processing...' : 'Signup'}
+            </button>
 
             <button
               type="button"
@@ -110,7 +207,7 @@ function SignupPage() {
               onClick={() => navigate('/login')}
               style={{ marginTop: '10px' }}
             >
-              Login
+              Back to Login
             </button>
           </form>
 

@@ -1,8 +1,12 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
+import { useAuthStore } from '../store/authStore';
+import { userController } from '../controllers';
 
 function MobileHeader() {
   const location = useLocation();
+  const { isLoggedIn, username, loginToken, logout } = useAuthStore();
+  const [balanceData, setBalanceData] = useState({ balance: '0', exposure: '0' });
 
   const getActive = (href) => {
     const path = location.pathname;
@@ -11,15 +15,47 @@ function MobileHeader() {
     return '';
   };
 
+  const refreshBalance = async () => {
+    if (!isLoggedIn || !loginToken) return;
+    try {
+      const response = await userController.getBalance(loginToken);
+      if (response.error === '0') {
+        setBalanceData({
+          balance: response.balance || '0',
+          exposure: response.exposure || '0'
+        });
+      }
+    } catch (error) {
+      console.error('Mobile Balance refresh error:', error);
+    }
+  };
+
+  useEffect(() => {
+    if (isLoggedIn) {
+      refreshBalance();
+      const timer = setInterval(refreshBalance, 30000);
+      return () => clearInterval(timer);
+    }
+  }, [isLoggedIn, loginToken]);
+
   return (
     <>
       {/* Mobile Header */}
       <header>
         <h1 className="top-logo"></h1>
-        <div className="btn-wrap">
-          <Link className="btn-signup ui-link" to="/signup">Sign up</Link>
-          <Link className="login-index ui-link" to="/login">Login</Link>
-        </div>
+        {!isLoggedIn ? (
+          <div className="btn-wrap">
+            <Link className="btn-signup ui-link" to="/signup">Sign up</Link>
+            <Link className="login-index ui-link" to="/login">Login</Link>
+          </div>
+        ) : (
+          <div className="account-wrap">
+            <Link to="/wallet" className="account-number">{username}</Link>
+            <div className="account-balance">
+                <span id="mainBalance"><span className="badge-currency">USD</span> {balanceData.balance}</span>
+            </div>
+          </div>
+        )}
 
         <div id="msgBox" className="message-wrap success to-open_bets" style={{ display: 'none' }}>
           <div className="message">
@@ -74,10 +110,17 @@ function MobileHeader() {
           <img className="icon-multi-markets" src="/images/transparent (3).gif" alt="multi-markets" width="24px" height="24px" />
           <span>Multi...</span>
         </Link>
-        <Link to="/login" className="mobile-bottom-nav-item">
-          <img className="icon-account" src="/images/transparent.gif" alt="account" width="24px" height="24px" />
-          <span>Account</span>
-        </Link>
+        {isLoggedIn ? (
+          <div className="mobile-bottom-nav-item" onClick={() => logout()} style={{ cursor: 'pointer' }}>
+            <img className="icon-account" src="/images/transparent.gif" alt="account" width="24px" height="24px" />
+            <span>Logout</span>
+          </div>
+        ) : (
+          <Link to="/login" className="mobile-bottom-nav-item">
+            <img className="icon-account" src="/images/transparent.gif" alt="account" width="24px" height="24px" />
+            <span>Account</span>
+          </Link>
+        )}
       </div>
     </>
   );

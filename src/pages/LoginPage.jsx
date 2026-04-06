@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { authController } from '../controllers';
+import { useAuthStore } from '../store/authStore';
 import '../styles/style-login.css';
 
 function LoginPage() {
@@ -7,7 +9,9 @@ function LoginPage() {
   const [loginName, setLoginName] = useState('');
   const [password, setPassword] = useState('');
   const [validationInput, setValidationInput] = useState('');
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const loginAction = useAuthStore((state) => state.login);
 
   const generateCode = () => String(Math.floor(1000 + Math.random() * 9000));
 
@@ -15,7 +19,7 @@ function LoginPage() {
     setValidationCode(generateCode());
   }, []);
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
     if (!loginName.trim()) { alert('Username is empty'); return; }
     if (!password.trim()) { alert('Password is empty'); return; }
@@ -25,7 +29,34 @@ function LoginPage() {
       setValidationInput('');
       return;
     }
-    alert('Login Successful');
+
+    try {
+      setLoading(true);
+      // Fetch user's current logic IP or just pass a mock if not available
+      const ip = '127.0.0.1'; // Simple placeholder if no IP fetcher
+      const response = await authController.login({
+        username: loginName,
+        password: password,
+        ip: ip
+      });
+
+      if (response.error === '0') {
+        // Success
+        loginAction(response.username || loginName, response.LoginToken);
+        alert('Login Successful');
+        navigate('/');
+      } else {
+        // Error from API
+        alert(response.msg || 'Login failed. Please check your credentials.');
+        setValidationCode(generateCode());
+        setValidationInput('');
+      }
+    } catch (error) {
+      console.error('Login Error:', error);
+      alert('An expected error occurred during login.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (

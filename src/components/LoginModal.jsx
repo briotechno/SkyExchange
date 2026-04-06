@@ -1,18 +1,24 @@
 import React, { useState, useEffect } from 'react';
+import { authController } from '../controllers';
+import { useAuthStore } from '../store/authStore';
 
 function LoginModal({ isOpen, onClose }) {
   const [validationCode, setValidationCode] = useState('');
   const [loginName, setLoginName] = useState('');
   const [password, setPassword] = useState('');
   const [validationInput, setValidationInput] = useState('');
+  const [loading, setLoading] = useState(false);
+  const loginAction = useAuthStore((state) => state.login);
 
   const generateCode = () => String(Math.floor(1000 + Math.random() * 9000));
 
   useEffect(() => {
-    setValidationCode(generateCode());
+    if (isOpen) {
+      setValidationCode(generateCode());
+    }
   }, [isOpen]);
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
     if (!loginName.trim()) { alert('Username is empty'); return; }
     if (!password.trim()) { alert('Password is empty'); return; }
@@ -22,8 +28,30 @@ function LoginModal({ isOpen, onClose }) {
       setValidationInput('');
       return;
     }
-    alert('Login Successful');
-    onClose();
+
+    try {
+      setLoading(true);
+      const response = await authController.login({
+        username: loginName,
+        password: password,
+        ip: '127.0.0.1'
+      });
+
+      if (response.error === '0') {
+        loginAction(response.username || loginName, response.LoginToken);
+        alert('Login Successful');
+        onClose();
+      } else {
+        alert(response.msg || 'Login failed.');
+        setValidationCode(generateCode());
+        setValidationInput('');
+      }
+    } catch (error) {
+      console.error('Modal Login Error:', error);
+      alert('Error during login.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   if (!isOpen) return null;
