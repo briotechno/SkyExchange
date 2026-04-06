@@ -12,10 +12,15 @@ function Layout({ children }) {
   return (
     <>
       {/* Desktop elements - hidden on mobile via CSS */}
-      <DesktopHeader onVirtualCricketClick={openLoginModal} />
+      <div className="desktop-only">
+        <DesktopHeader onVirtualCricketClick={openLoginModal} />
+      </div>
 
       {/* Mobile header - hidden on desktop via CSS */}
-      <MobileHeader />
+      <div className="mobile-only">
+        <MobileHeader />
+      </div>
+
 
       {/* Login Modal (triggered by Virtual Cricket etc.) */}
       <LoginModal isOpen={isLoginModalOpen} onClose={closeLoginModal} />

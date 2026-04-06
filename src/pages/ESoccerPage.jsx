@@ -16,7 +16,7 @@ function ESoccerPage() {
   return (
     <SportPageWithLayout
       sport="E-Soccer"
-      kvImage="/images/kv_esoccer.jpg"
+      kvImage="/images/kv_e-soccer.jpg"
       competitions={esoccerCompetitions}
       countries={esoccerCountries}
       matches={sampleEsoccerMatches}

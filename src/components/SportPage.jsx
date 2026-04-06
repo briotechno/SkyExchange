@@ -19,13 +19,14 @@ const sampleSoccerMatches = [
 ];
 const sampleTennisMatches = [];
 
-function MatchRow({ match, sport }) {
+function MatchRow({ match, sport, rowClass = '' }) {
   const isLive = match.status === 'In-Play';
   const gridClass = sport === 'Tennis' ? 'tennis-grid' : '';
 
   return (
-    <div className={`sports-row desktop-grid ${gridClass}`} id={`eventId_${match.id}`}>
+    <div className={`sports-row desktop-grid ${gridClass} ${rowClass} ${rowClass ? 'sports-row-mobile' : ''}`} id={`eventId_${match.id}`}>
       <div className="col-event">
+
         <div style={{ display: 'flex', alignItems: 'center', marginBottom: '3px' }}>
           <span className="green-dot" style={{ display: isLive ? 'inline-block' : 'none' }}></span>
           <a href="#" onClick={(e) => e.preventDefault()} className="event-link">
@@ -83,6 +84,7 @@ function MatchRow({ match, sport }) {
     </div>
   );
 }
+
 
 function SportPageWithLayout({
   sport,
@@ -145,9 +147,28 @@ function SportPageWithLayout({
                 <div className="col-expand"></div>
               </div>
 
+              {(sport === 'Soccer' || sport === 'Cricket' || sport === 'Tennis' || sport === 'E-Soccer' || sport === 'Multi Markets') && (
+                <>
+                  <h3 className="mobile-h3">Highlights</h3>
+                  <div className="sorting-wrap">
+                    <ul id="viewType">
+                      <li className="select">by Time</li>
+                      <li>by Competition</li>
+                    </ul>
+                  </div>
+                </>
+              )}
+
               <div id="eventlistData">
                 {matches.length > 0 ? (
-                  matches.map((m) => <MatchRow key={m.id} match={m} sport={sport} />)
+                  matches.map((m) => (
+                    <MatchRow 
+                      key={m.id} 
+                      match={m} 
+                      sport={sport} 
+                      rowClass={(sport === 'Soccer' || sport === 'Cricket' || sport === 'Tennis' || sport === 'E-Soccer' || sport === 'Multi Markets') ? 'mobile-grid' : ''} 
+                    />
+                  ))
                 ) : (
                   <div className="no-item" style={{ textAlign: 'center', padding: '20px' }}>
                     <div className="loading-wrap" style={{ display: 'flex', justifyContent: 'center' }}>
@@ -160,6 +181,7 @@ function SportPageWithLayout({
                 )}
               </div>
             </div>
+
 
             {/* Footer */}
             <Footer />

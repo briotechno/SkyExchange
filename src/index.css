@@ -1,6 +1,6 @@
 /* ====== GLOBAL BASICS ======= */
 body {
-  font-family: Tahoma, Helvetica, sans-serif;
+  font-family: Tahoma, Helvetica, sans-serif !important;
   color: #1e1e1e;
   font-size: 12px;
   line-height: 15px;
@@ -9,15 +9,43 @@ body {
   background: #eee;
 }
 
+.mobile-only {
+  display: none !important;
+}
+
+@media (max-width: 980px) {
+  .desktop-only {
+    display: none !important;
+  }
+
+  .mobile-only {
+    display: block !important;
+  }
+}
+
+
 /* ======= MAIN GRID (3-col layout like HTML) ======= */
 .main {
   display: grid;
   grid-template-columns: 240px 1fr 300px;
   min-height: calc(100vh - 56px - 34px);
   width: 100%;
-  max-width: 1400px;
+  max-width: 100%;
   margin: 0 auto;
 }
+
+@media (max-width: 980px) {
+  .main {
+    grid-template-columns: 1fr;
+    display: block !important;
+  }
+
+  .sidebar.sideNav,
+  .betslip {
+    display: none !important;
+  }
+}
+
 
 /* ===== LEFT SIDEBAR (sideNav - matching HTML) ===== */
 .sidebar.sideNav {
@@ -141,6 +169,13 @@ body {
   overflow: auto;
 }
 
+@media (max-width: 767px) {
+  .center {
+    background: #eee;
+  }
+}
+
+
 /* KV Banner */
 .banner1 {
   height: 185px;
@@ -177,9 +212,22 @@ body {
   align-items: center;
 }
 
+@media (max-width: 767px) {
+  .sports-row.mobile-grid {
+    grid-template-columns: 1fr 40px !important;
+    padding: 10px;
+  }
+
+  .sports-row.mobile-grid .col-matched,
+  .sports-row.mobile-grid .col-odds {
+    display: none !important;
+  }
+}
+
 .sports-row.tennis-grid {
   grid-template-columns: 1fr 110px 120px 120px 40px;
 }
+
 
 /* ODDS BOXES */
 .col-event {
@@ -392,6 +440,26 @@ body {
     transform: translate(-100%, 0);
   }
 }
+
+@media (max-width: 767px) {
+  .marquee-box1 {
+    height: 30px;
+    background-image: linear-gradient(180deg, #525252 0%, #2d2d2d 100%);
+    border-bottom: 1px solid #ffb400;
+  }
+
+  .marquee-box1 h4 {
+    font-size: 11px;
+    padding: 0 10px;
+    background: #333;
+  }
+
+  .marquee-box1 .marquee p {
+    font-size: 11px;
+    animation: marquee 20s linear infinite;
+  }
+}
+
 
 /* Sports Highlights Header */
 .sports-header {
@@ -761,7 +829,7 @@ body {
   display: flex;
   border-radius: 4px;
   overflow: hidden;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
 }
 
 .login-modal-left {
@@ -877,6 +945,115 @@ body {
   margin-top: 5px;
 }
 
-.login-modal-btn:hover {
-  background: linear-gradient(0deg, #474747 0%, #070707 100%);
+/* MOBILE SPECIFIC COMPONENTS */
+.mobile-h3 {
+  background-image: linear-gradient(-180deg, #2e4b5e 0%, #243a48 82%);
+  color: #fff;
+  font-size: 14px;
+  line-height: 2.2;
+  text-align: center;
+  margin: 0;
+  display: none;
+}
+
+.sorting-wrap {
+  display: none;
+  justify-content: center;
+  align-items: center;
+  height: 40px;
+  background: #f0f0f0;
+}
+
+.sorting-wrap ul {
+  display: flex;
+  background: #e3e3e3;
+  box-shadow: inset 0 1px 3px 0 rgba(0, 0, 0, 0.15);
+  border-radius: 6px;
+  width: 80%;
+  padding: 1px;
+  margin: 0;
+  list-style: none;
+}
+
+.sorting-wrap ul li {
+  flex: 1;
+  height: 30px;
+  border-radius: 5px;
+  font-size: 12px;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.sorting-wrap ul li.select {
+  color: #0074c4;
+  background: #fff;
+  box-shadow: 0 0 3px 0 rgba(0, 0, 0, 0.15);
+}
+
+@media (max-width: 767px) {
+
+  .mobile-h3,
+  .sorting-wrap {
+    display: flex;
+  }
+}
+
+/* MOBILE BOTTOM NAV */
+.mobile-bottom-nav {
+  display: none;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background: #1e2d3b;
+  height: 60px;
+  z-index: 1000;
+  justify-content: space-around;
+  align-items: center;
+  border-top: 1px solid #444;
+}
+
+.mobile-bottom-nav-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  text-decoration: none;
+  font-size: 10px;
+  flex: 1;
+  height: 100%;
+}
+
+.mobile-bottom-nav-item.active {
+  color: #ffc107;
+}
+
+@media (max-width: 980px) {
+  .mobile-bottom-nav {
+    display: flex;
+  }
+
+  body {
+    padding-bottom: 60px;
+  }
+}
+
+@media (max-width: 767px) {
+
+  .desktop-grid,
+  .sidebar,
+  .betslip,
+  .sports-table-head,
+  .sports-header {
+    display: none !important;
+  }
+
+  .sports-row-mobile,
+  .mobile-grid {
+    display: grid !important;
+  }
 }
