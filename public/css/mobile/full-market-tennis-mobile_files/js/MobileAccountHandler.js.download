@@ -1,0 +1,2 @@
+"undefined"==typeof MobileAccountHandler&&(MobileAccountHandler={});(function(){MobileAccountHandler.init=function(){$j("#openTV").hide();$j("#logout").click(function(){try{MobileMenuHandler.logoutPage()}catch(a){}});MobileMenuHandler.hidePromoteBanner()}})();
+

@@ -1,0 +1,5 @@
+"undefined"==typeof SportsBookEventUtil&&(SportsBookEventUtil={});
+(function(){SportsBookEventUtil.isReady=function(a){return 0<(a&SportsBookEventStatusType.READY.unique())};SportsBookEventUtil.isCancel=function(a){return 0<(a&SportsBookEventStatusType.CANCEL.unique())};SportsBookEventUtil.isOpen=function(a){return 0<(a&SportsBookEventStatusType.OPEN.unique())};SportsBookEventUtil.isSuspend=function(a){return 0<(a&SportsBookEventStatusType.SUSPEND.unique())};SportsBookEventUtil.isClose=function(a){return 0<(a&SportsBookEventStatusType.CLOSE.unique())};SportsBookEventUtil.isEnd=
+function(a){return 0<(a&SportsBookEventStatusType.END.unique())};SportsBookEventUtil.isUnsettled=function(a){return 0<(a&SportsBookEventStatusType.UNSETTLED.unique())};SportsBookEventUtil.isSettled=function(a){return 0<(a&SportsBookEventStatusType.SETTLED.unique())};SportsBookEventUtil.isVoided=function(a){return 0<(a&SportsBookEventStatusType.VOIDED.unique())};SportsBookEventUtil.isLive=function(a){return!0===a||1===a};SportsBookEventUtil.isHideEvent=function(a){return SportsBookEventUtil.isClose(a)||
+SportsBookEventUtil.isEnd(a)||SportsBookEventUtil.isSettled(a)}})();
+

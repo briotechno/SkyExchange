@@ -1,0 +1,4 @@
+"undefined"==typeof CookieUtil&&(CookieUtil={});
+(function(){CookieUtil.setCookie=function(b,a,c,d,e){CookieUtil.deleteCookie(b);c=c?c:30;d=d?d:"/";b=b+"="+escape(a);-1!=c&&(a=new Date,a.setTime(a.getTime()+864E5*c),b+=";expires="+a.toGMTString());d&&(b+=";path="+d);e&&(b+=";domain="+e);document.cookie=b};CookieUtil.getCookie=function(b,a){a||(a=a||document.cookie);a=a.split(";");for(var c=0;c<a.length;c++){var d=a[c].split("=");if(d[0].replace(/^\s+|\s+$/g,"")==b)return unescape(d[1])}return null};CookieUtil.deleteCookie=function(b){var a=new Date;
+a.setTime(a.getTime()-1E3);b=b+"=null;expires="+a.toGMTString()+";path=/";document.cookie=b};CookieUtil.getCookieDomainFormat=function(b){if(/^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/.test(b)||"localhost"==b)return"";var a=b.indexOf(".");return 0<=a?b.substring(a):""}})();
+

@@ -1,0 +1,5 @@
+"undefined"==typeof MobileKeepSessionHandler&&(MobileKeepSessionHandler={});
+(function(){MobileKeepSessionHandler.queryTask=null;var c=[];MobileKeepSessionHandler.init=function(){if(null!=PageCommonConfig.keepSessionUrl&&0!=PageCommonConfig.keepSessionUrl.length){var d=PageCommonConfig.keepSessionUrl.split(","),b;for(b in d){var a=d[b],e=$j('<img src="'+d[b]+'" width="0" border="0" />');c.push([a,e]);$j("body").append(e)}MobileKeepSessionHandler.initTask()}};MobileKeepSessionHandler.initTask=function(){if(null==MobileKeepSessionHandler.queryTask){var d=TaskExecuter.createTask(60,
+0,function(){if(0==c.length)MobileKeepSessionHandler.abortTask();else try{for(var b in c){var a=c[b][0];a=-1<a.indexOf("?")?a+("&t="+(new Date).getTime()):a+("?t="+(new Date).getTime());c[b][1].attr("src",a)}}catch(e){Trace.printStackTrace(e)}finally{this.check(),TaskExecuter.execute()}});MobileKeepSessionHandler.queryTask=d}else MobileKeepSessionHandler.queryTask.isStop=!1;MobileKeepSessionHandler.queryTask.run();TaskExecuter.execute()};MobileKeepSessionHandler.abortTask=function(){null!=MobileKeepSessionHandler.queryTask&&
+MobileKeepSessionHandler.queryTask.stop()}})();
+

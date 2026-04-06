@@ -1,0 +1,4 @@
+"undefined"==typeof MobileAsianHandicapPlTableUtil&&(MobileAsianHandicapPlTableUtil={});
+(function(){MobileAsianHandicapPlTableUtil.renderAsianHandicapPlTable=function(){var a=MarketExposureObj.plTable;if(!$j.isEmptyObject(a)){var h=MarketExposureObj.eventId,k=MarketExposureObj.marketId,d=$j("#plTable");d.hide();$j.each(a,function(b,l){if(0!=b){b=DataBase.markets.getFirstSelection(h,k,b);var m=b.originalRunnerName+" win by<span></span>",g=0!=b.sortPriority%2?"home":"visit";d.find("#plTable_"+g+"_team").html(m);$j.each(l,function(c,e){c=$j("#plTable_"+g+"_"+c);c.html(e);e=0>e?"lose":"win";
+c.removeClass();c.addClass(e)})}});var f=d.find("#plTable_draw");a=a[0][0];f.removeClass();f.addClass(0>a?"lose":"win");f.html(a);d.show()}}})();
+

@@ -1,0 +1,2 @@
+"undefined"==typeof I18N&&(I18N={});(function(){I18N.setResource=function(a){this.resource=a};I18N.addResource=function(a){this.resource=this.resource||{};for(var b in a)this.resource[b]=a[b]};I18N.get=function(a,b){var c=a=a.toString()||"";"undefined"!==typeof this.resource&&(c=this.resource[a]?this.resource[a]:a);return"undefined"!==typeof b&&0<b.length?String(c).replace(new RegExp("{([0-"+b.length+"])}","g"),function(e,d){return b[d]}):c}})();
+

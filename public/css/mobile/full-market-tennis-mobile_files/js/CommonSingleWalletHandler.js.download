@@ -1,0 +1,4 @@
+"undefined"==typeof CommonSingleWalletHandler&&(CommonSingleWalletHandler={});
+(function(){CommonSingleWalletHandler.login=function(a,b,d,e,f){return $j.ajax({type:"POST",url:"/exchange/mobile/member/mobileVendorController/login",data:{vendorSite:a,walletType:1},beforeSend:function(){},complete:function(){},success:function(c){null!=c&&(c.error?(CommonSingleWalletHandler.showMessage(c.error,e,f),d()):c.success&&b(c))}})};CommonSingleWalletHandler.logout=function(a){$j.ajax({type:"POST",url:"/exchange/mobile/member/mobileVendorController/logout",data:{vendorSite:a},beforeSend:function(){},
+complete:function(){},success:function(b){null!=b&&b.error&&CommonSingleWalletHandler.showMessage(b.error)}})};CommonSingleWalletHandler.showMessage=function(a,b,d){a=I18N.get(a,a);PageConfig.isMobileOrTablet||PageCommonConfig.isMobileOrTablet?(b&&b.css("display","flex"),d?d.html(a):($j("#commonErrorMsg").html(a),$j("#commonErrorMsg").show())):NoticeHandler.error(a)}})();
+

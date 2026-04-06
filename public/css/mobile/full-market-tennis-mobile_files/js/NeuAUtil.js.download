@@ -1,0 +1,2 @@
+"undefined"==typeof NeuAUtil&&(NeuAUtil={});(function(){NeuAUtil.init=function(a){try{neua_settings({project_key:"CRICKET_IN",neua_url:"https://collector-9w-live.omnitrend.biz",user_id:"CRICKET_DEFAULT_USER",app_session:a,neua_tag:"neua"}),neua_init()}catch(b){Trace.printStackTrace(b)}};NeuAUtil.userLogIn=function(a){try{neua_settings({user_id:a})}catch(b){Trace.printStackTrace(b)}};NeuAUtil.userLogOut=function(){try{neua_settings({user_id:"CRICKET_DEFAULT_USER"})}catch(a){Trace.printStackTrace(a)}}})();
+

@@ -1,0 +1,4 @@
+"undefined"==typeof BridgeUtils&&(BridgeUtils={});
+(function(){function c(a){if(window.WebViewJavascriptBridge)return a(WebViewJavascriptBridge);if(window.WVJBCallbacks)return window.WVJBCallbacks.push(a);window.WVJBCallbacks=[a];var b=document.createElement("iframe");b.style.display="none";b.src="https://__bridge_loaded__";document.documentElement.appendChild(b);setTimeout(function(){document.documentElement.removeChild(b)},0)}BridgeUtils.sendMessage=function(a){c(function(b){b.callHandler("ObjC Echo",a)});console.log(a)};BridgeUtils.bridgeIOSRegister=
+function(){c(function(a){a.registerHandler("JS Echo",function(b,d){})})}})();
+

@@ -1,0 +1,4 @@
+"undefined"==typeof MobileForecastHandler&&(MobileForecastHandler={});
+(function(){MobileForecastHandler.init=()=>{let a=PageCommonConfig.enableForecastWithCommission?"switch_on":"switch_off";JsCache.get("#withCommCheckBox").removeClass().addClass(a);JsCache.get("#withCommCheckBox").off("click").on("click",function(){$j(this).hasClass("switch_on")?$j(this).removeClass().addClass("switch_off"):$j(this).removeClass().addClass("switch_on")});JsCache.get("#settingSave").click(function(){JsCache.get("#settingSave").hasClass("disable")||MobileForecastHandler.updateForecastWithComm()})};
+MobileForecastHandler.updateForecastWithComm=()=>{let a=$j("#withCommCheckBox").hasClass("switch_on")?1:0;$j.ajax({type:"POST",dataType:"JSON",url:"/mobile/member/mobilePlayerService/updateForecastWithComm",data:{enableForecastWithCommission:a},success:function(){PageCommonConfig.enableForecastWithCommission=a}})}})();
+

@@ -1,0 +1,2 @@
+"undefined"==typeof SupportInfoUtil&&(SupportInfoUtil={});(function(){SupportInfoUtil.init=function(c,d){d=d?"click":"hover";var a=c.find("[id^=support_]"),b=c.find("[id^=supportDetail_]");null!=a&&0!=a.length&&null!=b&&0!=b.length&&($j(a[0]).addClass("open"),$j(b[0]).addClass("open"),a.on(d,function(){var e=$j(this),f=e.prop("id");a.removeClass("open");b.removeClass("open");e.addClass("open");c.find("#"+f.replace("support_","supportDetail_")).addClass("open")}))}})();
+

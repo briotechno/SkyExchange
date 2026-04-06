@@ -1,0 +1,4 @@
+"undefined"==typeof AjaxUtil&&(AjaxUtil={});
+(function(){var c=0;AjaxUtil.ajaxSetup=function(){if("undefined"==typeof jQuery){c++;if(60<=c){alert("not import jquery lib");return}setTimeout(AjaxUtil.ajaxSetup,1E3)}jQuery.ajaxSetup({statusCode:{410:function(a){var b=a.getResponseHeader("refreshPage");b&&""!==b?window.top!=window.self&&a.getResponseHeader("logout")?((b=a.getResponseHeader("message"))&&""!==b&&window.confirm(decodeURIComponent(a.getResponseHeader("message"))),window.self.location="/autoLogout.jsp"):(top.onbeforeunload&&(top.onbeforeunload=
+null),null!=a.getResponseHeader("redirectPage")?window.self.location="/exchange/index.jsp":top.location.reload()):(a=a.getResponseHeader("redirectPath"))&&""!==a&&(top.location.href=a)}},beforeSend:function(a,b){"undefined"!=typeof b.dataType&&b.dataType||(b.dataType="JSON")}})}})();AjaxUtil.ajaxSetup();
+

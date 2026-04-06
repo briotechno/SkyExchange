@@ -1,0 +1,2 @@
+"undefined"==typeof FlexSliderUtil&&(FlexSliderUtil={});(function(){var b={start:function(){$j(".promo-banner-wrap").addClass("active");$j(".promo-banner").resize()},namespace:"promo-",animation:"slide",direction:"horizontal",slideshowSpeed:4E3,animationSpeed:500,pauseOnHover:!1,controlNav:!0,directionNav:!0,allowOneSlide:!1,prevText:"",nextText:""};FlexSliderUtil.getSetting=function(){return b};FlexSliderUtil.flexslider=function(a){null==a&&(a=b);$j(".promo-banner").flexslider(a)}})();
+

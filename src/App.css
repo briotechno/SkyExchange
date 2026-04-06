@@ -1,0 +1,32 @@
+/* Reset for Betting Site */
+#root {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  text-align: left;
+}
+
+body {
+  margin: 0;
+  background-color: #eee;
+}
+
+/* Mobile View: hide desktop elements */
+@media screen and (max-width: 768px) {
+  .top,
+  .header,
+  .menu-wrap,
+  #loginBox,
+  #loginToGoApi {
+    display: none !important;
+  }
+}
+
+/* Desktop View: hide mobile elements */
+@media only screen and (min-width: 769px) {
+  .nav-mobile,
+  header,
+  .mobile-bottom-nav {
+    display: none !important;
+  }
+}

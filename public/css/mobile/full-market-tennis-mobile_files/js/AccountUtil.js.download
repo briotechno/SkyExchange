@@ -1,0 +1,2 @@
+"undefined"==typeof AccountUtil&&(AccountUtil={});(function(){AccountUtil.isCashMode=a=>PaymentModeType.getInstanceOf(a).unique()==PaymentModeType.CASH.value})();
+

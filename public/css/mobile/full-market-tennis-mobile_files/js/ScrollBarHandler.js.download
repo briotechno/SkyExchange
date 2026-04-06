@@ -1,0 +1,2 @@
+"undefined"==typeof ScrollBarHandler&&(ScrollBarHandler={});(function(){ScrollBarHandler.init=function(a){a.perfectScrollbar()};ScrollBarHandler.move=function(a,b){a.scrollLeft(b).perfectScrollbar("update")};ScrollBarHandler.reset=function(a){a.scrollLeft(0).perfectScrollbar("update")}})();
+
