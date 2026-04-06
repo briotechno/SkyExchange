@@ -1,31 +1,89 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { authController, userController } from '../controllers';
+import { useAuthStore } from '../store/authStore';
 
 function DesktopHeader({ onVirtualCricketClick }) {
   const [validationCode, setValidationCode] = useState('');
   const [loginName, setLoginName] = useState('');
   const [password, setPassword] = useState('');
   const [validationInput, setValidationInput] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [balanceData, setBalanceData] = useState({ balance: '0', exposure: '0' });
+  
   const location = useLocation();
   const navigate = useNavigate();
+  const { isLoggedIn, username, loginToken, logout } = useAuthStore();
+  const loginAction = useAuthStore((state) => state.login);
 
   const generateCode = () => {
     return String(Math.floor(1000 + Math.random() * 9000));
+  };
+
+  const refreshBalance = async () => {
+    if (!isLoggedIn || !loginToken) return;
+    try {
+      const response = await userController.getBalance(loginToken);
+      if (response.error === '0') {
+        setBalanceData({
+          balance: response.balance || '0',
+          exposure: response.exposure || '0'
+        });
+      }
+    } catch (error) {
+      console.error('Balance refresh error:', error);
+    }
   };
 
   useEffect(() => {
     setValidationCode(generateCode());
   }, []);
 
-  const validateLogin = (e) => {
+  useEffect(() => {
+    if (isLoggedIn) {
+      refreshBalance();
+      const timer = setInterval(refreshBalance, 30000);
+      return () => clearInterval(timer);
+    }
+  }, [isLoggedIn, loginToken]);
+
+  const validateLogin = async (e) => {
     e.preventDefault();
+    if (!loginName.trim()) { alert('Username is empty'); return; }
+    if (!password.trim()) { alert('Password is empty'); return; }
     if (validationInput.trim() !== validationCode) {
       alert('Invalid Validation Code!');
       setValidationCode(generateCode());
       setValidationInput('');
       return;
     }
-    alert('Validation Correct Login Proceed');
+
+    try {
+      setLoading(true);
+      const response = await authController.login({
+        username: loginName,
+        password: password,
+        ip: '127.0.0.1'
+      });
+
+      if (response.error === '0') {
+        loginAction(response.username || loginName, response.LoginToken);
+        alert('Login Successful');
+        setLoginName('');
+        setPassword('');
+        setValidationInput('');
+        setValidationCode(generateCode());
+      } else {
+        alert(response.msg || 'Login failed.');
+        setValidationCode(generateCode());
+        setValidationInput('');
+      }
+    } catch (error) {
+      console.error('Desktop Login Error:', error);
+      alert('Network or unexpected error during login.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   const isActive = (path) => {
@@ -62,65 +120,93 @@ function DesktopHeader({ onVirtualCricketClick }) {
             </div>
           </div>
 
-          {/* Login */}
-          <ul className="login-wrap">
-            <li className="user error">
-              <input
-                id="loginName"
-                type="text"
-                placeholder="Username"
-                value={loginName}
-                onChange={(e) => setLoginName(e.target.value)}
-              />
-            </li>
-            <li>
-              <input
-                id="password"
-                type="password"
-                placeholder="Password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-              />
-            </li>
-            <li>
-              <input
-                type="text"
-                id="validationInput"
-                placeholder="Validation"
-                value={validationInput}
-                onChange={(e) => setValidationInput(e.target.value)}
-              />
-            </li>
-            <li>
-              <span
-                id="validationCode"
-                style={{
-                  position: 'absolute',
-                  color: '#000',
-                  fontWeight: 'bold',
-                  fontSize: '18px',
-                  zIndex: 9,
-                  top: '30px',
-                  right: '195px',
-                }}
-              >
-                {validationCode}
-              </span>
-            </li>
-            <li className="li-login">
-              <a id="loginBtn" className="btn-login" onClick={validateLogin} style={{ cursor: 'pointer' }}>
-                Login
-                <img className="icon-login" src="/images/transparent.gif" alt="" />
-              </a>
-            </li>
-            <li className="li-signup">
-              <Link to="/signup" className="btn-signup">
-                Sign up
-                <img className="icon-login" src="/images/transparent.gif" alt="" />
-              </Link>
-            </li>
-            <li id="errorMsg" className="error" style={{ display: 'block' }}></li>
-          </ul>
+          {/* Login or Account Info */}
+          {!isLoggedIn ? (
+            <ul className="login-wrap">
+              <li className="user error">
+                <input
+                  id="loginName"
+                  type="text"
+                  placeholder="Username"
+                  autoComplete="username"
+                  value={loginName}
+                  onChange={(e) => setLoginName(e.target.value)}
+                />
+              </li>
+              <li>
+                <input
+                  id="password"
+                  type="password"
+                  placeholder="Password"
+                  autoComplete="current-password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                />
+              </li>
+              <li>
+                <input
+                  type="text"
+                  id="validationInput"
+                  placeholder="Validation"
+                  value={validationInput}
+                  onChange={(e) => setValidationInput(e.target.value)}
+                  onKeyPress={(e) => e.key === 'Enter' && validateLogin(e)}
+                />
+              </li>
+              <li>
+                <span
+                  id="validationCode"
+                  style={{
+                    position: 'absolute',
+                    color: '#000',
+                    fontWeight: 'bold',
+                    fontSize: '18px',
+                    zIndex: 9,
+                    top: '30px',
+                    right: '195px',
+                  }}
+                >
+                  {validationCode}
+                </span>
+              </li>
+              <li className="li-login">
+                <a id="loginBtn" className="btn-login" onClick={validateLogin} style={{ cursor: 'pointer' }}>
+                  {loading ? '...' : 'Login'}
+                  <img className="icon-login" src="/images/transparent.gif" alt="" />
+                </a>
+              </li>
+              <li className="li-signup">
+                <Link to="/signup" className="btn-signup">
+                  Sign up
+                  <img className="icon-login" src="/images/transparent.gif" alt="" />
+                </Link>
+              </li>
+              <li id="errorMsg" className="error" style={{ display: 'block' }}></li>
+            </ul>
+          ) : (
+            <ul className="account-wrap">
+              <li className="account-number">
+                <Link to="/profile" className="ui-link">{username}</Link>
+              </li>
+              <li className="account-balance">
+                <p>Main Balance</p>
+                <span id="mainBalance">
+                  <span className="badge-currency">USD</span> {balanceData.balance}
+                </span>
+              </li>
+              <li className="account-exposure">
+                <p>Exposure</p>
+                <Link to="/bets" className="ui-link">
+                  <span id="mainExposure" className="red">{balanceData.exposure}</span>
+                </Link>
+              </li>
+              <li className="li-logout">
+                <a className="btn-login" onClick={() => logout()} style={{ cursor: 'pointer' }}>
+                  Logout
+                </a>
+              </li>
+            </ul>
+          )}
         </div>
 
         {/* Menu Wrap */}
