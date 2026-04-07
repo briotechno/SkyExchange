@@ -112,6 +112,14 @@
   background: #fff;
 }
 
+.details-column-left {
+  flex: 1 1 50%;
+}
+
+.details-column-right {
+  flex: 1 1 40%;
+}
+
 .edit-link {
   color: #0077cc;
   text-decoration: none;
@@ -284,6 +292,44 @@
   font-weight: 700;
 }
 
+.filter-row-simple {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 5px 0;
+  font-size: 13px;
+  color: #333;
+}
+
+.filter-label {
+  margin-left: 10px;
+}
+
+.filter-row-flex {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.filter-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+}
+
+.filter-actions {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.date-picker {
+  width: 80px;
+}
+
 .text-success {
   color: #508d0e;
   font-weight: normal;
@@ -366,4 +412,169 @@
 .matched-section {
   margin-top: 20px;
   border: 1px solid #7c8e9d;
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+  .account-container {
+    flex-direction: column;
+    margin: 0;
+    padding: 10px;
+    gap: 15px;
+  }
+
+  .account-sidebar {
+    width: 100%;
+    border: none;
+    border-bottom: 2px solid #ccc;
+  }
+
+  .sidebar-header {
+    text-align: left;
+    font-size: 16px;
+    padding: 10px 15px;
+  }
+
+  .account-nav ul {
+    display: flex;
+    overflow-x: auto;
+    white-space: nowrap;
+    background: #f8f8f8;
+    padding: 5px 0;
+  }
+
+  .account-nav li {
+    border-bottom: none;
+    border-right: 1px solid #eee;
+  }
+
+  .account-nav a {
+    padding: 10px 15px;
+    font-size: 14px;
+  }
+
+  .account-main {
+    width: 100%;
+  }
+
+  .details-section {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .details-column-left,
+  .details-column-right {
+    flex: 1 1 100%;
+    width: 100%;
+  }
+
+  .details-box {
+    margin-bottom: 15px;
+  }
+
+  .balance-summary {
+    flex-direction: column;
+    gap: 15px;
+    padding: 15px;
+  }
+
+  .balance-item {
+    flex: 1 1 100%;
+    border-right: none;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 15px;
+  }
+
+  .welcome-msg {
+    padding: 0;
+  }
+
+  .data-table-wrapper {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    margin-bottom: 20px;
+    border: 1px solid #7e97a7;
+  }
+
+  .data-table {
+    min-width: 600px;
+    /* Force scroll on small screens */
+  }
+
+  .tabs-container {
+    width: 100%;
+    display: flex;
+    overflow-x: auto;
+  }
+
+  .tab-btn {
+    flex: 1;
+    padding: 10px 15px;
+    white-space: nowrap;
+    min-width: 120px;
+  }
+
+  .sub-tabs {
+    overflow-x: auto;
+    white-space: nowrap;
+    padding: 5px 0;
+    margin-bottom: 10px;
+  }
+
+  .sub-tab {
+    flex-shrink: 0;
+    font-size: 13px;
+    padding: 8px 12px;
+  }
+
+  .bets-filter-box {
+    padding: 15px;
+  }
+
+  .filter-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 15px;
+  }
+
+  .date-input {
+    width: 100% !important;
+    padding: 8px !important;
+    font-size: 14px !important;
+  }
+
+  .btn-submit-bets {
+    width: 100%;
+    padding: 10px;
+    margin-top: 10px;
+  }
+
+  .filter-row-flex {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .filter-group {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .filter-actions {
+    flex-direction: column;
+  }
+
+  .pagination-wrap {
+    flex-wrap: wrap;
+  }
+}
+
+.filter-actions {
+  flex-direction: column;
+}
+
+.pagination-wrap {
+  flex-wrap: wrap;
+}
 }

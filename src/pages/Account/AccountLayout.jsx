@@ -39,7 +39,7 @@ function AccountLayout({ children, title }) {
             </ul>
           </nav>
         </aside>
-        
+
         <main className="account-main">
           {title && <div className="content-header">{title}</div>}
           <div className="content-body">

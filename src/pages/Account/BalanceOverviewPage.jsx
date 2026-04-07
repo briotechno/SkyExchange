@@ -19,26 +19,28 @@ function BalanceOverviewPage() {
         </div>
       </div>
 
-      <table className="data-table balance-table">
-        <thead>
-          <tr>
-            <th>Date</th>
-            <th>Transaction №</th>
-            <th>Debits</th>
-            <th>Credits</th>
-            <th>Balance</th>
-            <th>Remarks</th>
-            <th>From/To</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td colSpan="7" style={{ textAlign: 'center', padding: '20px', color: '#999' }}>
-              No data found.
-            </td>
-          </tr>
-        </tbody>
-      </table>
+      <div className="data-table-wrapper">
+        <table className="data-table balance-table">
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Transaction №</th>
+              <th>Debits</th>
+              <th>Credits</th>
+              <th>Balance</th>
+              <th>Remarks</th>
+              <th>From/To</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td colSpan="7" style={{ textAlign: 'center', padding: '20px', color: '#999' }}>
+                No data found.
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </AccountLayout>
   );
 }
