@@ -128,7 +128,7 @@ function DesktopHeader({ onVirtualCricketClick }) {
   return (
     <>
       <div className="top">
-        <div className="header full-wrap" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+        <div className="header full-wrap" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', paddingTop: 0 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
             <h1 style={{ margin: 0, display: 'flex', alignItems: 'center' }}>
               <Link to="/">SKYEXCHANGE</Link>
@@ -228,7 +228,7 @@ function DesktopHeader({ onVirtualCricketClick }) {
               <div className="balance-container" style={{ position: 'relative' }}>
                 <div
                   className="balance-bar"
-                  style={{ display: 'flex', alignItems: 'center', background: 'linear-gradient(to bottom, #444, #222)', border: '1px solid #555', borderRadius: '4px', padding: '2px', height: '32px', cursor: 'pointer' }}
+                  style={{ display: 'flex', alignItems: 'center', background: 'linear-gradient(to bottom, #444, #222)', border: '1px solid #555', borderRadius: '4px', padding: '2px', height: '32px', cursor: 'pointer', boxShadow: 'inset 0 1px 0 0 rgba(255,255,255,.5)' }}
                   onClick={() => setIsBalanceModalOpen(!isBalanceModalOpen)}
                 >
                   <div className="balance-info" style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '0 10px', borderRight: '1px solid #555' }}>
@@ -266,7 +266,7 @@ function DesktopHeader({ onVirtualCricketClick }) {
                 )}
               </div>
               <div className="account-dropdown-container" style={{ position: 'relative' }}>
-                <button onClick={() => setIsAccountMenuOpen(!isAccountMenuOpen)} onBlur={() => setTimeout(() => setIsAccountMenuOpen(false), 200)} style={{ display: 'flex', alignItems: 'center', gap: '4px', background: 'linear-gradient(to bottom, #444, #222)', border: '1px solid #555', borderRadius: '4px', padding: '0 10px', height: '32px', color: '#ffb400', fontSize: '13px', fontWeight: 'bold', cursor: 'pointer' }}>
+                <button onClick={() => setIsAccountMenuOpen(!isAccountMenuOpen)} onBlur={() => setTimeout(() => setIsAccountMenuOpen(false), 200)} style={{ display: 'flex', alignItems: 'center', gap: '4px', background: 'linear-gradient(to bottom, #444, #222)', border: '1px solid #555', borderRadius: '4px', padding: '0 10px', height: '32px', color: '#ffb400', fontSize: '13px', fontWeight: 'bold', cursor: 'pointer', boxShadow: 'inset 0 1px 0 0 rgba(255,255,255,.5)' }}>
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"></path></svg>
                   My Account <span style={{ fontSize: '10px' }}>▼</span>
                 </button>
