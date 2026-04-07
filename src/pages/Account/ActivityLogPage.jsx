@@ -25,30 +25,32 @@ function ActivityLogPage() {
 
   return (
     <AccountLayout title="Activity Log">
-      <table className="data-table balance-table">
-        <thead>
-          <tr>
-            <th style={{ textAlign: 'left' }}>Login Date & Time</th>
-            <th style={{ textAlign: 'center' }}>Login Status</th>
-            <th style={{ textAlign: 'center' }}>IP Address</th>
-            <th style={{ textAlign: 'center' }}>ISP</th>
-            <th style={{ textAlign: 'left' }}>City/State/Country</th>
-            <th style={{ textAlign: 'left' }}>User Agent Type</th>
-          </tr>
-        </thead>
-        <tbody>
-          {paginatedData.map((row, i) => (
-            <tr key={i}>
-              <td style={{ textAlign: 'left' }}>{row.date}</td>
-              <td className="text-success" style={{ textAlign: 'center' }}>Login Success</td>
-              <td style={{ textAlign: 'center' }}>{row.ip}</td>
-              <td style={{ textAlign: 'center' }}>{row.isp}</td>
-              <td style={{ textAlign: 'left' }}>{row.location}</td>
-              <td style={{ textAlign: 'left' }}>{row.agent}</td>
+      <div className="data-table-wrapper">
+        <table className="data-table balance-table">
+          <thead>
+            <tr>
+              <th style={{ textAlign: 'left' }}>Login Date & Time</th>
+              <th style={{ textAlign: 'center' }}>Login Status</th>
+              <th style={{ textAlign: 'center' }}>IP Address</th>
+              <th style={{ textAlign: 'center' }}>ISP</th>
+              <th style={{ textAlign: 'left' }}>City/State/Country</th>
+              <th style={{ textAlign: 'left' }}>User Agent Type</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {paginatedData.map((row, i) => (
+              <tr key={i}>
+                <td style={{ textAlign: 'left' }}>{row.date}</td>
+                <td className="text-success" style={{ textAlign: 'center' }}>Login Success</td>
+                <td style={{ textAlign: 'center' }}>{row.ip}</td>
+                <td style={{ textAlign: 'center' }}>{row.isp}</td>
+                <td style={{ textAlign: 'left' }}>{row.location}</td>
+                <td style={{ textAlign: 'left' }}>{row.agent}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
 
       {/* Dynamic Pagination Bar */}
       <div className="pagination-wrap">

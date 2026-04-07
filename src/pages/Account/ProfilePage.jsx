@@ -5,7 +5,7 @@ function ProfilePage() {
   return (
     <AccountLayout title="Account Details">
       <div className="details-section">
-        <div style={{ flex: '1 1 50%' }}>
+        <div className="details-column-left">
           <div className="details-box">
             <h3>About You</h3>
             <table className="details-table">
@@ -66,7 +66,7 @@ function ProfilePage() {
           </div>
         </div>
 
-        <div style={{ flex: '1 1 40%' }}>
+        <div className="details-column-right">
           <div className="details-box">
             <h3>Setting</h3>
             <table className="details-table">

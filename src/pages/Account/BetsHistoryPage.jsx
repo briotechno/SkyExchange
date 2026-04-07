@@ -35,12 +35,12 @@ function BetsHistoryPage() {
       </div>
 
       <div className="bets-filter-box">
-        <div className="filter-row" style={{ border: 'none', background: 'transparent', margin: 0 }}>
+        <div className="filter-row-simple">
           <span>Bet Status: </span>
-          <select style={{ padding: '2px 5px', border: '1px solid #ccc' }}>
+          <select className="date-input">
             <option>All</option>
           </select>
-          <span style={{ marginLeft: '10px' }}>Order By: </span>
+          <span className="filter-label">Order By: </span>
           <label><input type="checkbox" checked readOnly /> Bet placed</label>
           <label><input type="checkbox" /> Market</label>
         </div>
@@ -48,50 +48,54 @@ function BetsHistoryPage() {
 
       <div className="unmatched-section">
         <div className="section-title">Unmatched</div>
-        <table className="data-table balance-table">
-          <thead>
-            <tr>
-              <th style={{ textAlign: 'left' }}>Market</th>
-              <th style={{ textAlign: 'right' }}>Selection</th>
-              <th style={{ textAlign: 'center' }}>Type</th>
-              <th style={{ textAlign: 'center' }}>Bet ID</th>
-              <th style={{ textAlign: 'center' }}>Bet placed</th>
-              <th style={{ textAlign: 'center' }}>Odds req.</th>
-              <th style={{ textAlign: 'center' }}>Matched</th>
-              <th style={{ textAlign: 'center' }}>Unmatched</th>
-              <th style={{ textAlign: 'center' }}>Date matched</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td colSpan="9" style={{ padding: '15px' }}>You have no bets in this time period.</td>
-            </tr>
-          </tbody>
-        </table>
+        <div className="data-table-wrapper">
+          <table className="data-table balance-table">
+            <thead>
+              <tr>
+                <th style={{ textAlign: 'left' }}>Market</th>
+                <th style={{ textAlign: 'right' }}>Selection</th>
+                <th style={{ textAlign: 'center' }}>Type</th>
+                <th style={{ textAlign: 'center' }}>Bet ID</th>
+                <th style={{ textAlign: 'center' }}>Bet placed</th>
+                <th style={{ textAlign: 'center' }}>Odds req.</th>
+                <th style={{ textAlign: 'center' }}>Matched</th>
+                <th style={{ textAlign: 'center' }}>Unmatched</th>
+                <th style={{ textAlign: 'center' }}>Date matched</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td colSpan="9" style={{ padding: '15px' }}>You have no bets in this time period.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
 
       <div className="matched-section">
         <div className="section-title">Matched</div>
-        <table className="data-table balance-table">
-          <thead>
-            <tr>
-              <th style={{ textAlign: 'left' }}>Market</th>
-              <th style={{ textAlign: 'right' }}>Selection</th>
-              <th style={{ textAlign: 'center' }}>Type</th>
-              <th style={{ textAlign: 'center' }}>Bet ID</th>
-              <th style={{ textAlign: 'center' }}>Bet placed</th>
-              <th style={{ textAlign: 'center' }}>Odds req.</th>
-              <th style={{ textAlign: 'center' }}>Matched</th>
-              <th style={{ textAlign: 'center' }}>Avg. odds matched</th>
-              <th style={{ textAlign: 'center' }}>Date matched</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td colSpan="9" style={{ padding: '15px' }}>You have no bets in this time period.</td>
-            </tr>
-          </tbody>
-        </table>
+        <div className="data-table-wrapper">
+          <table className="data-table balance-table">
+            <thead>
+              <tr>
+                <th style={{ textAlign: 'left' }}>Market</th>
+                <th style={{ textAlign: 'right' }}>Selection</th>
+                <th style={{ textAlign: 'center' }}>Type</th>
+                <th style={{ textAlign: 'center' }}>Bet ID</th>
+                <th style={{ textAlign: 'center' }}>Bet placed</th>
+                <th style={{ textAlign: 'center' }}>Odds req.</th>
+                <th style={{ textAlign: 'center' }}>Matched</th>
+                <th style={{ textAlign: 'center' }}>Avg. odds matched</th>
+                <th style={{ textAlign: 'center' }}>Date matched</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td colSpan="9" style={{ padding: '15px' }}>You have no bets in this time period.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
     </>
   );
@@ -111,18 +115,22 @@ function BetsHistoryPage() {
       </div>
 
       <div className="bets-filter-box">
-        <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap', alignItems: 'center', marginBottom: '10px' }}>
-          <span>Bet Status:</span>
-          <select className="date-input">
-            <option>Settled</option>
-          </select>
-          <span>Period</span>
-          <input className="date-input" type="text" defaultValue="2026-04-07" style={{ width: '80px' }} />
-          <span>09:00 to</span>
-          <input className="date-input" type="text" defaultValue="2026-04-08" style={{ width: '80px' }} />
-          <span>08:59</span>
+        <div className="filter-row-flex">
+          <div className="filter-group">
+            <span>Bet Status:</span>
+            <select className="date-input">
+              <option>Settled</option>
+            </select>
+          </div>
+          <div className="filter-group">
+            <span>Period</span>
+            <input className="date-input date-picker" type="text" defaultValue="2026-04-07" />
+            <span>09:00 to</span>
+            <input className="date-input date-picker" type="text" defaultValue="2026-04-08" />
+            <span>08:59</span>
+          </div>
         </div>
-        <div style={{ display: 'flex', gap: '10px' }}>
+        <div className="filter-actions">
           <button className="sub-tab">Just For Today</button>
           <button className="sub-tab">From Yesterday</button>
           <button className="btn-submit-bets">Get History</button>
@@ -161,14 +169,16 @@ function BetsHistoryPage() {
       </div>
 
       <div className="bets-filter-box">
-        <div style={{ display: 'flex', gap: '10px', alignItems: 'center', marginBottom: '10px' }}>
-          <span>Period</span>
-          <input className="date-input" type="text" defaultValue="2026-04-07" style={{ width: '80px' }} />
-          <span>09:00 to</span>
-          <input className="date-input" type="text" defaultValue="2026-04-08" style={{ width: '80px' }} />
-          <span>08:59</span>
+        <div className="filter-row-flex">
+          <div className="filter-group">
+            <span>Period</span>
+            <input className="date-input date-picker" type="text" defaultValue="2026-04-07" />
+            <span>09:00 to</span>
+            <input className="date-input date-picker" type="text" defaultValue="2026-04-08" />
+            <span>08:59</span>
+          </div>
         </div>
-        <div style={{ display: 'flex', gap: '10px' }}>
+        <div className="filter-actions">
           <button className="sub-tab">Just For Today</button>
           <button className="sub-tab">From Yesterday</button>
           <button className="btn-submit-bets">Get P & L</button>
