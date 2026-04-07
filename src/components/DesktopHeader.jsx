@@ -16,7 +16,7 @@ function DesktopHeader({ onVirtualCricketClick }) {
   const [showSearchResults, setShowSearchResults] = useState(false);
   const [isAccountMenuOpen, setIsAccountMenuOpen] = useState(false);
   const [isBalanceModalOpen, setIsBalanceModalOpen] = useState(false);
-  
+
   const location = useLocation();
   const navigate = useNavigate();
   const { isLoggedIn, username, loginToken, logout } = useAuthStore();
@@ -128,7 +128,7 @@ function DesktopHeader({ onVirtualCricketClick }) {
   return (
     <>
       <div className="top">
-        <div className="header full-wrap" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+        <div className="header full-wrap" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', paddingTop: 0 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
             <h1 style={{ margin: 0, display: 'flex', alignItems: 'center' }}>
               <Link to="/">SKYEXCHANGE</Link>
@@ -145,9 +145,9 @@ function DesktopHeader({ onVirtualCricketClick }) {
                   onFocus={() => searchInput.length >= 3 && setShowSearchResults(true)}
                   onBlur={() => setTimeout(() => setShowSearchResults(false), 200)}
                 />
-                <button 
-                  id="searchClear" 
-                  className="search-clear" 
+                <button
+                  id="searchClear"
+                  className="search-clear"
                   style={{ display: searchInput ? 'block' : 'none' }}
                   onClick={() => handleSearch('')}
                 ></button>
@@ -163,7 +163,7 @@ function DesktopHeader({ onVirtualCricketClick }) {
                     )}
                     {!searchLoading && searchResults.map((res, index) => (
                       <li key={res.Gid || index} style={{ borderBottom: '1px solid #333' }}>
-                        <Link 
+                        <Link
                           to={`/sports?type=${res.Type.toLowerCase()}&gid=${res.Gid}`}
                           style={{ display: 'block', padding: '8px 12px', textDecoration: 'none' }}
                           onClick={() => {
@@ -192,20 +192,20 @@ function DesktopHeader({ onVirtualCricketClick }) {
                 <input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} />
               </li>
               <li style={{ position: 'relative' }}>
-                <input 
-                  type="text" 
-                  placeholder="Validation" 
-                  value={validationInput} 
-                  onChange={(e) => setValidationInput(e.target.value)} 
+                <input
+                  type="text"
+                  placeholder="Validation"
+                  value={validationInput}
+                  onChange={(e) => setValidationInput(e.target.value)}
                   style={{ paddingRight: '60px' }}
                 />
-                <span style={{ 
-                  position: 'absolute', 
-                  color: '#000', 
-                  fontWeight: 'bold', 
-                  fontSize: '14px', 
-                  top: '50%', 
-                  right: '10px', 
+                <span style={{
+                  position: 'absolute',
+                  color: '#000',
+                  fontWeight: 'bold',
+                  fontSize: '14px',
+                  top: '50%',
+                  right: '10px',
                   transform: 'translateY(-50%)',
                   pointerEvents: 'none',
                   background: '#eee',
@@ -228,7 +228,7 @@ function DesktopHeader({ onVirtualCricketClick }) {
               <div className="balance-container" style={{ position: 'relative' }}>
                 <div
                   className="balance-bar"
-                  style={{ display: 'flex', alignItems: 'center', background: 'linear-gradient(to bottom, #444, #222)', border: '1px solid #555', borderRadius: '4px', padding: '2px', height: '32px', cursor: 'pointer' }}
+                  style={{ display: 'flex', alignItems: 'center', background: 'linear-gradient(to bottom, #444, #222)', border: '1px solid #555', borderRadius: '4px', padding: '2px', height: '32px', cursor: 'pointer', boxShadow: 'inset 0 1px 0 0 rgba(255,255,255,.5)' }}
                   onClick={() => setIsBalanceModalOpen(!isBalanceModalOpen)}
                 >
                   <div className="balance-info" style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '0 10px', borderRight: '1px solid #555' }}>
@@ -251,7 +251,7 @@ function DesktopHeader({ onVirtualCricketClick }) {
                           <span style={{ fontSize: '13px', color: '#333' }}>{balanceData.exposure}</span>
                         </div>
                       </div>
-                      {[ { label: 'Royal Gaming Balance', val: '0', unit: 'PTH' }, { label: 'Casino Balance', val: '0', unit: 'PTH' }, { label: 'BPoker Balance', val: '0 Points', unit: '' } ].map((item) => (
+                      {[{ label: 'Royal Gaming Balance', val: '0', unit: 'PTH' }, { label: 'Casino Balance', val: '0', unit: 'PTH' }, { label: 'BPoker Balance', val: '0 Points', unit: '' }].map((item) => (
                         <div key={item.label} style={{ background: '#fff', borderRadius: '4px', padding: '10px', marginBottom: '10px', border: '1px solid #ddd', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                           <div><p style={{ margin: '0', fontSize: '12px', color: '#666' }}>{item.label}</p><p style={{ margin: '3px 0 0 0', fontSize: '15px', fontWeight: 'bold', color: '#2c3e50' }}>{item.unit && <span style={{ color: '#7f8c8d', fontSize: '12px', marginRight: '3px' }}>{item.unit}</span>}{item.val}</p></div>
                           <button style={{ background: '#ecf0f1', border: '1px solid #bdc3c7', padding: '5px 12px', borderRadius: '4px', fontSize: '13px', fontWeight: '600', color: '#333', cursor: 'pointer' }}>Recall</button>
@@ -266,7 +266,7 @@ function DesktopHeader({ onVirtualCricketClick }) {
                 )}
               </div>
               <div className="account-dropdown-container" style={{ position: 'relative' }}>
-                <button onClick={() => setIsAccountMenuOpen(!isAccountMenuOpen)} onBlur={() => setTimeout(() => setIsAccountMenuOpen(false), 200)} style={{ display: 'flex', alignItems: 'center', gap: '4px', background: 'linear-gradient(to bottom, #444, #222)', border: '1px solid #555', borderRadius: '4px', padding: '0 10px', height: '32px', color: '#ffb400', fontSize: '13px', fontWeight: 'bold', cursor: 'pointer' }}>
+                <button onClick={() => setIsAccountMenuOpen(!isAccountMenuOpen)} onBlur={() => setTimeout(() => setIsAccountMenuOpen(false), 200)} style={{ display: 'flex', alignItems: 'center', gap: '4px', background: 'linear-gradient(to bottom, #444, #222)', border: '1px solid #555', borderRadius: '4px', padding: '0 10px', height: '32px', color: '#ffb400', fontSize: '13px', fontWeight: 'bold', cursor: 'pointer', boxShadow: 'inset 0 1px 0 0 rgba(255,255,255,.5)' }}>
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"></path></svg>
                   My Account <span style={{ fontSize: '10px' }}>▼</span>
                 </button>
@@ -276,7 +276,7 @@ function DesktopHeader({ onVirtualCricketClick }) {
                       <span style={{ fontWeight: 'bold', color: '#333' }}>{username}</span><span style={{ fontSize: '11px', color: '#666' }}>GMT+5:30</span>
                     </div>
                     <ul style={{ listStyle: 'none', padding: '0', margin: '0' }}>
-                      {[ { label: 'My Profile', to: '/profile' }, { label: 'Balance Overview', to: '/balance-overview' }, { label: 'Account Statement', to: '/statement' }, { label: 'My Bets', to: '/bets' }, { label: 'Bets History', to: '/bets-history' }, { label: 'Profit & Loss', to: '/profit-loss' }, { label: 'Activity Log', to: '/activity-log' } ].map((item) => (
+                      {[{ label: 'My Profile', to: '/profile' }, { label: 'Balance Overview', to: '/balance-overview' }, { label: 'Account Statement', to: '/statement' }, { label: 'My Bets', to: '/bets?tab=current' }, { label: 'Bets History', to: '/bets?tab=history' }, { label: 'Profit & Loss', to: '/bets?tab=pnl' }, { label: 'Activity Log', to: '/activity-log' }].map((item) => (
                         <li key={item.label} style={{ borderBottom: '1px solid #f0f0f0' }}>
                           <Link to={item.to} style={{ display: 'block', padding: '10px 15px', textDecoration: 'none', color: '#333', fontSize: '13px' }} onClick={() => setIsAccountMenuOpen(false)}>{item.label}</Link>
                         </li>
