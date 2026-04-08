@@ -16,6 +16,9 @@ import BalanceOverviewPage from './pages/Account/BalanceOverviewPage';
 import BetsHistoryPage from './pages/Account/BetsHistoryPage';
 import AccountStatementPage from './pages/Account/AccountStatementPage';
 import ActivityLogPage from './pages/Account/ActivityLogPage';
+import HorseRacingPage from './pages/HorseRacingPage';
+import FullMarketHorseRacingPage from './pages/FullMarketHorseRacingPage';
+import FullMarketCricketPage from './pages/FullMarketCricketPage';
 import NotFoundPage from './pages/NotFoundPage';
 
 import './App.css';
@@ -32,6 +35,9 @@ function App() {
         <Route path="/soccer" element={<SoccerPage />} />
         <Route path="/tennis" element={<TennisPage />} />
         <Route path="/e-soccer" element={<ESoccerPage />} />
+        <Route path="/horse-racing" element={<HorseRacingPage />} />
+        <Route path="/full-market-horse-racing" element={<FullMarketHorseRacingPage />} />
+        <Route path="/full-market-cricket" element={<FullMarketCricketPage />} />
         <Route path="/sports" element={<SportsPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/signup" element={<SignupPage />} />

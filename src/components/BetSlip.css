@@ -1,0 +1,164 @@
+/* BetSlip CSS - Refined for Pixel Perfect Design */
+
+.betslip-wrapper {
+  background-color: #fff;
+  font-family: Arial, sans-serif;
+  border: 1px solid #ccc;
+  width: 100%;
+}
+
+.betslip-header-row {
+  background-color: #b5c4cb;
+  display: flex;
+  padding: 4px 10px;
+  font-size: 11px;
+  font-weight: bold;
+  color: #333;
+}
+
+.bs-header-selection { flex: 2; }
+.bs-header-odds { flex: 1; text-align: center; }
+.bs-header-stake { flex: 1; text-align: center; }
+.bs-header-profit { flex: 1; text-align: right; }
+
+.beslip-event-name {
+  background-color: #fff;
+  padding: 5px 10px;
+  font-size: 12px;
+  font-weight: bold;
+  color: #333;
+  border-bottom: 1px solid #ddd;
+}
+
+.bet-entry-row {
+  background-color: #d7ebf8; /* Light blue for back */
+  padding: 8px 10px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.bet-entry-row.lay {
+  background-color: #f6e6ea; /* Light pink for lay */
+}
+
+.bet-selection-name {
+  flex: 2;
+  font-size: 12px;
+  font-weight: bold;
+  color: #333;
+}
+
+.bet-market-name {
+  font-weight: normal;
+  color: #777;
+  margin-left: 4px;
+}
+
+.bet-input-wrap {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+}
+
+.bet-input {
+  width: 55px;
+  height: 24px;
+  border: 1px solid #7e7e7e;
+  border-radius: 4px;
+  text-align: center;
+  font-size: 13px;
+}
+
+.bet-profit-val {
+  flex: 1;
+  text-align: right;
+  font-size: 13px;
+  color: #333;
+}
+
+.stake-buttons-row {
+  display: flex;
+  gap: 4px;
+  padding: 8px 10px;
+  background-color: #fff;
+}
+
+.btn-stake {
+  flex: 1;
+  height: 26px;
+  background: white;
+  border: 1px solid #7e7e7e;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: bold;
+  cursor: pointer;
+  color: #333;
+}
+
+.btn-stake:hover {
+  background-color: #eee;
+}
+
+.min-bet-info {
+  background-color: #d7ebf8;
+  padding: 3px 10px;
+  text-align: right;
+  font-size: 11px;
+  color: #333;
+  border-bottom: 1px solid #add8f4;
+}
+
+.liability-row {
+  text-align: right;
+  padding: 5px 10px;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.liability-label { color: #8d5d5d; }
+.liability-val { color: #d0021b; margin-left: 5px; }
+
+.bet-actions-row {
+  display: flex;
+  gap: 15px;
+  padding: 10px;
+  background-color: #f7f7f7;
+}
+
+.btn-cancel-all {
+  flex: 1;
+  height: 34px;
+  background: linear-gradient(to bottom, #ffffff 0%, #e5e5e5 100%);
+  border: 1px solid #7e7e7e;
+  border-radius: 4px;
+  font-weight: bold;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.btn-place-bets {
+  flex: 1;
+  height: 34px;
+  background: #a5a5a5;
+  border: 1px solid #7e7e7e;
+  border-radius: 4px;
+  color: #ffb80c;
+  font-weight: bold;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.confirm-checkbox-row {
+  padding: 10px;
+  font-size: 12px;
+  color: #333;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.confirm-checkbox-row input {
+  width: 16px;
+  height: 16px;
+}

@@ -305,7 +305,8 @@ function DesktopHeader({ onVirtualCricketClick }) {
               <li><Link to="/soccer"><span className="tag-live"><strong></strong>0</span>Soccer</Link></li>
               <li><Link to="/tennis"><span className="tag-live"><strong></strong>8</span>Tennis</Link></li>
               <li><a href="#" onClick={(e) => { e.preventDefault(); onVirtualCricketClick && onVirtualCricketClick(); }}>Virtual Cricket</a></li>
-              <li><Link to="/e-soccer"><span className="tag-live"><strong></strong>7</span>E-Soccer</Link></li>
+              <li><Link to="/e-soccer" className={isActive('/e-soccer') ? 'active-menu' : ''}><span className="tag-live"><strong></strong>7</span>E-Soccer</Link></li>
+              <li><Link to="/horse-racing" className={isActive('/horse-racing') ? 'active-menu' : ''}>Horse Racing</Link></li>
             </ul>
             <ul className="setting-wrap">
               <li className="time_zone"><span>Time Zone :</span> GMT+5:30</li>
