@@ -36,6 +36,9 @@ function MatchRow({ match, sport, rowClass = '' }) {
             onClick={(e) => {
               e.preventDefault();
               if (sport === 'Cricket') navigate('/full-market-cricket');
+              else if (sport === 'Soccer') navigate('/full-market-soccer');
+              else if (sport === 'Tennis') navigate('/full-market-tennis');
+              else if (sport === 'E-Soccer') navigate('/full-market-e-soccer');
             }} 
             className="event-link"
           >

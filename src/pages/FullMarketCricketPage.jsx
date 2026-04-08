@@ -5,7 +5,7 @@ import Layout from '../components/Layout';
 
 const FullMarketCricketPage = () => {
   const [selectedBet, setSelectedBet] = useState(null);
-  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  const [activeInns, setActiveInns] = useState(1);
 
   const marketData = {
     matchOdds: [
@@ -34,25 +34,25 @@ const FullMarketCricketPage = () => {
   return (
     <Layout>
       <div className="full-market-container cricket-market">
-        {/* Sidebar Navigation */}
+        {/* Sidebar Navigation - Precise Levels */}
         <aside className="market-sidebar">
           <div className="sidebar-header">Sports</div>
           <nav className="sidebar-nav">
-            <div className="nav-item">All Sports</div>
-            <div className="nav-item active-level-1">Cricket</div>
-            <div className="nav-item active-level-2">ICC Men's T20 World Cup</div>
-            <div className="nav-item active-level-3">Canada v United Arab Emirates</div>
-            <div className="nav-item active-level-4">Match Odds</div>
+            <div className="nav-item level-sports">All Sports</div>
+            <div className="nav-item level-cricket">Cricket</div>
+            <div className="nav-item level-competition">ICC Men's T20 World Cup</div>
+            <div className="nav-item level-match">Canada v United Arab Emirates</div>
+            <div className="nav-item level-market">Match Odds</div>
           </nav>
         </aside>
 
         {/* Main Content Area */}
         <main className="market-main-content">
-          {/* Scoreboard Section */}
+          {/* Scoreboard Section - Dark Theme */}
           <section className="scoreboard-section">
             <div className="score-top-bar">
               <div className="team-info">
-                <div style={{ width: '24px', height: '16px', background: 'red' }}></div> {/* Placeholder flag */}
+                <div style={{ width: '24px', height: '16px', background: '#d32f2f' }}></div>
                 <span>Canada</span>
               </div>
               <div className="match-scores-center">
@@ -61,7 +61,7 @@ const FullMarketCricketPage = () => {
               </div>
               <div className="team-info">
                 <span>United Arab Emirates</span>
-                <div style={{ width: '24px', height: '16px', background: 'green' }}></div> {/* Placeholder flag */}
+                <div style={{ width: '24px', height: '16px', background: '#388e3c' }}></div>
               </div>
             </div>
             <div className="graph-area">
@@ -69,16 +69,34 @@ const FullMarketCricketPage = () => {
                 RUN RATE
                 <div className="run-rate-line"></div>
               </div>
+              <div className="graph-controls">
+                <button className={`inns-btn ${activeInns === 1 ? 'active' : ''}`} onClick={() => setActiveInns(1)}>CAN INNS</button>
+                <button className={`inns-btn ${activeInns === 2 ? 'active' : ''}`} onClick={() => setActiveInns(2)}>UAE INNS</button>
+              </div>
             </div>
           </section>
+
+          {/* Center Control Bar */}
+          <div className="market-control-bar">
+            <div className="control-bar-inner">
+              <i className="icon-pin" title="Pin Market"></i>
+              <i className="icon-refresh" title="Refresh Odds"></i>
+            </div>
+          </div>
 
           {/* Market Odds Table */}
           <div className="market-section">
             <div className="market-header-bar">
               <h3>Match Odds <span className="tag-inplay">In-Play</span></h3>
               <div className="matched-info">
-                <span>Matched: <strong>PTH 676,571,907</strong></span>
-                <span className="btn-live">Live</span>
+                <div className="max-pill">Max 8000</div>
+                <div className="matched-amount">Matched: <strong>PTH 676,571,907</strong></div>
+                <div className="btn-live-tv">
+                  <svg width="12" height="12" viewBox="0 0 16 16" fill="white" style={{marginRight: '4px'}}>
+                    <path d="M14.5 2h-13C.7 2 0 2.7 0 3.5v9c0 .8.7 1.5 1.5 1.5h13c.8 0 1.5-.7 1.5-1.5v-9c0-.8-.7-1.5-1.5-1.5zM14 12H2V4h12v8zM5 10l6-3-6-3v6z"/>
+                  </svg>
+                  Live
+                </div>
               </div>
             </div>
 
@@ -86,8 +104,8 @@ const FullMarketCricketPage = () => {
               <thead>
                 <tr className="odds-header-labels">
                   <th className="runner-col" style={{ textAlign: 'left', paddingLeft: '15px' }}>2 selections</th>
-                  <th colSpan="3" style={{ padding: '0' }}><div className="back-header-main" style={{ margin: '0 auto' }}>Back all</div></th>
-                  <th colSpan="3" style={{ padding: '0' }}><div className="lay-header-main" style={{ margin: '0 auto' }}>Lay all</div></th>
+                  <th colSpan="3"><div className="back-header-pill" style={{ margin: '0 auto' }}>Back all</div></th>
+                  <th colSpan="3"><div className="lay-header-pill" style={{ margin: '0 auto' }}>Lay all</div></th>
                 </tr>
               </thead>
               <tbody>
@@ -117,13 +135,20 @@ const FullMarketCricketPage = () => {
           {/* Bookmaker Market Section */}
           <div className="market-section">
             <div className="market-section-title">
-              <span className="add-pin">☆</span>
-              <strong>Bookmaker Market</strong>
-              <span className="zero-comm">Zero Commission</span>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <span className="add-pin">☆</span>
+                <span>Bookmaker Market</span>
+              </div>
+              <span className="comm-tag">Zero Commission</span>
             </div>
-            <div className="section-head" style={{ background: '#f5f5f5', color: '#333', borderBottom: '1px solid #ddd' }}>
+            <div className="market-sub-labels">
+              <div className="label-box">Min</div>
+              <div className="label-val">5.00</div>
+              <div className="label-box">Max</div>
+              <div className="label-val">39,219.00</div>
+            </div>
+            <div className="market-sub-head" style={{ background: '#f5f5f5' }}>
               <h4>Bookmaker</h4>
-              <div className="min-max-label">Min 5.00 Max 39,219.00</div>
             </div>
             <table className="odds-table bookmaker-table">
               <thead>
@@ -136,19 +161,22 @@ const FullMarketCricketPage = () => {
               <tbody>
                 <tr className="runner-row">
                   <td className="runner-info-cell"><span className="runner-name">Canada</span></td>
-                  <td colSpan="6" style={{ background: '#f9f9f9' }}>
-                    <div style={{ background: '#bdbdbd', color: '#d0021b', fontWeight: 'bold', padding: '10px', textAlign: 'center' }}>Suspend</div>
+                  <td colSpan="6" style={{ padding: '0' }}>
+                    <div className="suspend-overlay">Suspend</div>
                   </td>
                 </tr>
                 <tr className="runner-row">
                   <td className="runner-info-cell"><span className="runner-name">United Arab Emirates</span></td>
-                  <td className="odds-cell" style={{ border: 'none' }}></td>
-                  <td className="odds-cell" style={{ background: '#e2f2fe' }}>33</td>
-                  <td className="odds-cell" style={{ background: '#add8f4' }}>34</td>
-                  <td className="odds-cell" style={{ background: '#72bbef' }}>35</td>
-                  <td className="odds-cell" style={{ background: '#faa9ba' }}>37</td>
-                  <td className="odds-cell" style={{ background: '#fbcbd5' }}>38</td>
-                  <td className="odds-cell" style={{ background: '#fde4ea' }}>39</td>
+                  <td className="odds-cell back-3"></td>
+                  <td className="odds-cell back-2"></td>
+                  <td className="odds-cell back-1">
+                    <span className="price">35</span>
+                  </td>
+                  <td className="odds-cell lay-1">
+                    <span className="price">37</span>
+                  </td>
+                  <td className="odds-cell lay-2"></td>
+                  <td className="odds-cell lay-3"></td>
                 </tr>
               </tbody>
             </table>
@@ -157,16 +185,24 @@ const FullMarketCricketPage = () => {
           {/* Win The Toss Section */}
           <div className="market-section">
             <div className="market-section-title">
-              <span className="add-pin">☆</span>
-              <strong>Win The Toss</strong>
-              <span className="zero-comm">Zero Commission</span>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <span className="add-pin">☆</span>
+                <span>Win The Toss</span>
+              </div>
+              <span className="comm-tag">Zero Commission</span>
+            </div>
+            <div className="market-sub-labels">
+              <div className="label-box">Min</div>
+              <div className="label-val">10.00</div>
+              <div className="label-box">Max</div>
+              <div className="label-val">5,000.00</div>
             </div>
             <table className="odds-table">
               <thead>
                 <tr className="odds-header-labels">
                   <th className="runner-col" style={{ textAlign: 'left', paddingLeft: '15px' }}>2 selections</th>
-                  <th colSpan="3"><div className="back-header-main" style={{ margin: '0 auto' }}>Back all</div></th>
-                  <th colSpan="3"><div className="lay-header-main" style={{ margin: '0 auto' }}>Lay all</div></th>
+                  <th colSpan="3"><div className="back-header-pill" style={{ margin: '0 auto' }}>Back all</div></th>
+                  <th colSpan="3"><div className="lay-header-pill" style={{ margin: '0 auto' }}>Lay all</div></th>
                 </tr>
               </thead>
               <tbody>
@@ -190,44 +226,6 @@ const FullMarketCricketPage = () => {
               </tbody>
             </table>
           </div>
-
-          {/* Line Market Section */}
-          <div className="market-section">
-            <div className="market-section-title">
-              <span className="add-pin">☆</span>
-              <strong>Line Market</strong>
-              <span className="zero-comm">Zero Commission</span>
-            </div>
-            <table className="odds-table">
-              <thead>
-                <tr className="odds-header-labels">
-                  <th className="runner-col" style={{ textAlign: 'left', paddingLeft: '15px' }}>2 selections</th>
-                  <th colSpan="3"><div className="back-header-main" style={{ margin: '0 auto' }}>Back all</div></th>
-                  <th colSpan="3"><div className="lay-header-main" style={{ margin: '0 auto' }}>Lay all</div></th>
-                </tr>
-              </thead>
-              <tbody>
-                {marketData.lineMarket.map((runner) => (
-                  <tr key={runner.id} className="runner-row">
-                    <td className="runner-info-cell"><span className="runner-name">{runner.name}</span></td>
-                    {runner.back.slice().reverse().map((b, i) => (
-                      <td key={`b-${i}`} className={`odds-cell back-${3 - i}`} onClick={() => handleBetClick(runner.name, 'Back', b.price, 'Line Market')}>
-                        <span className="price">{b.price || '-'}</span>
-                        <span className="size">{b.size || ''}</span>
-                      </td>
-                    ))}
-                    {runner.lay.map((l, i) => (
-                      <td key={`l-${i}`} className={`odds-cell lay-${i + 1}`} onClick={() => handleBetClick(runner.name, 'Lay', l.price, 'Line Market')}>
-                        <span className="price">{l.price || '-'}</span>
-                        <span className="size">{l.size || ''}</span>
-                      </td>
-                    ))}
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-
         </main>
 
         {/* Right Sidebar - BetSlip */}

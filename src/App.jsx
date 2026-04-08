@@ -19,6 +19,9 @@ import ActivityLogPage from './pages/Account/ActivityLogPage';
 import HorseRacingPage from './pages/HorseRacingPage';
 import FullMarketHorseRacingPage from './pages/FullMarketHorseRacingPage';
 import FullMarketCricketPage from './pages/FullMarketCricketPage';
+import FullMarketSoccerPage from './pages/FullMarketSoccerPage';
+import FullMarketTennisPage from './pages/FullMarketTennisPage';
+import FullMarketESoccerPage from './pages/FullMarketESoccerPage';
 import NotFoundPage from './pages/NotFoundPage';
 
 import './App.css';
@@ -38,6 +41,9 @@ function App() {
         <Route path="/horse-racing" element={<HorseRacingPage />} />
         <Route path="/full-market-horse-racing" element={<FullMarketHorseRacingPage />} />
         <Route path="/full-market-cricket" element={<FullMarketCricketPage />} />
+        <Route path="/full-market-soccer" element={<FullMarketSoccerPage />} />
+        <Route path="/full-market-tennis" element={<FullMarketTennisPage />} />
+        <Route path="/full-market-e-soccer" element={<FullMarketESoccerPage />} />
         <Route path="/sports" element={<SportsPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/signup" element={<SignupPage />} />
