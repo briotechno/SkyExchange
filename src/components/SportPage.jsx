@@ -1,4 +1,5 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import Layout from './Layout';
 import LeftSidebar from './LeftSidebar';
 import BetSlip from './BetSlip';
@@ -22,6 +23,7 @@ const sampleTennisMatches = [];
 function MatchRow({ match, sport, rowClass = '' }) {
   const isLive = match.status === 'In-Play';
   const gridClass = sport === 'Tennis' ? 'tennis-grid' : '';
+  const navigate = useNavigate();
 
   return (
     <div className={`sports-row desktop-grid ${gridClass} ${rowClass} ${rowClass ? 'sports-row-mobile' : ''}`} id={`eventId_${match.id}`}>
@@ -29,7 +31,17 @@ function MatchRow({ match, sport, rowClass = '' }) {
 
         <div style={{ display: 'flex', alignItems: 'center', marginBottom: '3px' }}>
           <span className="green-dot" style={{ display: isLive ? 'inline-block' : 'none' }}></span>
-          <a href="#" onClick={(e) => e.preventDefault()} className="event-link">
+          <a 
+            href="#" 
+            onClick={(e) => {
+              e.preventDefault();
+              if (sport === 'Cricket') navigate('/full-market-cricket');
+              else if (sport === 'Soccer') navigate('/full-market-soccer');
+              else if (sport === 'Tennis') navigate('/full-market-tennis');
+              else if (sport === 'E-Soccer') navigate('/full-market-e-soccer');
+            }} 
+            className="event-link"
+          >
             {match.name}
           </a>
         </div>

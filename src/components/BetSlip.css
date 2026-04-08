@@ -1,0 +1,179 @@
+/* BetSlip CSS - High Fidelity Replication of Legacy Sky247 */
+
+.betslip-wrapper {
+  background-color: #fff;
+  font-family: Arial, sans-serif;
+  border: 1px solid #ccc;
+  padding: 0;
+}
+
+.betslip-primary-header {
+  background-color: #243a48;
+  color: #ffffff;
+  font-size: 13px;
+  font-weight: bold;
+  padding: 8px 10px;
+}
+
+.betslip-labels-row {
+  display: flex;
+  background-color: #dce5ec; /* Light Grayish-Blue */
+  color: #444444;
+  padding: 0 5px;
+  font-size: 11px;
+  height: 25px;
+  align-items: center;
+  border-bottom: 1px solid #c8d1d8;
+}
+
+.bs-label-selection { width: 45%; padding-left: 5px; }
+.bs-label-odds { width: 15%; text-align: center; }
+.bs-label-stake { width: 25%; text-align: center; }
+.bs-label-liability { width: 15%; text-align: center; }
+
+.betslip-event-header {
+  background-color: #ffffff;
+  padding: 5px 10px;
+  font-size: 11px;
+  font-weight: bold;
+  color: #000;
+  border-bottom: 1px solid #eeeeee;
+}
+
+.bet-entry-row {
+  display: flex;
+  align-items: center;
+  padding: 8px 5px;
+  border-bottom: 1px solid #eee;
+}
+
+.bet-entry-row.back { background-color: #e2f2ff; }
+.bet-entry-row.lay { background-color: #fdf1f3; }
+
+.bet-selection-info {
+  width: 45%;
+  padding-left: 5px;
+  display: flex;
+  flex-direction: column;
+}
+
+.bet-runner-name {
+  font-weight: 700;
+  color: #000;
+  font-size: 12px;
+}
+
+.bet-market-name {
+  color: #666;
+  font-size: 10px;
+  font-weight: 400;
+  margin-top: 2px;
+}
+
+.bet-input-container {
+  width: 20%;
+  display: flex;
+  justify-content: center;
+}
+
+.bet-field-input {
+  height: 24px;
+  border: 1px solid #b7c4cc;
+  border-radius: 2px;
+  background-color: #ffffff;
+  padding: 2px 5px;
+  font-size: 12px;
+  text-align: center;
+}
+
+.bet-input-odds { width: 50px; }
+.bet-input-stake { width: 65px; }
+
+.bet-liability-val {
+  width: 15%;
+  text-align: center;
+  font-size: 12px;
+  font-weight: 700;
+  color: #333;
+}
+
+.betslip-stake-grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr); /* 1x6 grid from legacy */
+  gap: 2px;
+  padding: 10px 5px;
+  background-color: #f2f2f2;
+}
+
+.btn-quick-stake {
+  background: #f2f2f2;
+  border: 1px solid #cccccc;
+  border-radius: 2px;
+  color: #333;
+  font-size: 11px;
+  padding: 6px 0;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.btn-quick-stake:hover { background: #e0e0e0; }
+
+.betslip-min-info {
+  padding: 5px 10px;
+  text-align: right;
+  font-size: 11px;
+  color: #666;
+  border-bottom: 1px solid #ddd;
+}
+
+.betslip-liability-total {
+  display: flex;
+  justify-content: flex-end;
+  padding: 8px 10px;
+  gap: 10px;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.total-liability-label { color: #666; font-weight: 400; }
+.total-liability-value { color: #d0021b; font-weight: 800; }
+
+.betslip-action-buttons {
+  display: flex;
+  gap: 8px;
+  padding: 10px;
+}
+
+.btn-bs-cancel {
+  flex: 1;
+  background: linear-gradient(to bottom, #ffffff, #eeeeee);
+  border: 1px solid #bbbbbb;
+  color: #333;
+  padding: 8px;
+  font-weight: 600;
+  font-size: 13px;
+  border-radius: 2px;
+  cursor: pointer;
+}
+
+.btn-bs-place {
+  flex: 1.5;
+  background-color: #243a48;
+  color: #ffb80c; /* Bold Yellow */
+  border: none;
+  padding: 8px;
+  font-weight: bold;
+  font-size: 14px;
+  border-radius: 2px;
+  cursor: pointer;
+  text-transform: uppercase;
+}
+
+.betslip-confirm-wrap {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 10px 10px;
+  font-size: 12px;
+  color: #333;
+}

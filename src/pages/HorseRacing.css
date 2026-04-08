@@ -1,0 +1,361 @@
+/* Horse Racing Page CSS - Pixel Perfect Replication */
+
+:root {
+  --yellow: #f2b705;
+  --dark: #1a1a1a;
+  --dark2: #2c2c2c;
+  --navdark: #0d2f44;
+  --line: #d7d7d7;
+  --light: #f4f4f4;
+  --panel: #ffffff;
+  --tab: #d6d6d6;
+  --blue: #1678c2;
+  --green: #4caf50;
+}
+
+.page.horse-racing-page {
+  display: grid;
+  grid-template-columns: 240px 1fr 300px;
+  min-height: calc(100vh - 82px);
+  background: #f1f1f1;
+}
+
+/* LEFT MENU */
+.sidebar {
+  background: #fff;
+  border-right: 1px solid var(--line);
+  height: 100%;
+  overflow-y: auto;
+}
+
+.side-head {
+  background: #111;
+  color: #fff;
+  font-weight: 900;
+  padding: 7px 10px;
+  font-size: 13px;
+}
+
+.side-item {
+  padding: 6px 10px;
+  border-bottom: 1px solid #eee;
+  font-size: 13px;
+  color: #111;
+  text-decoration: none;
+  display: block;
+}
+
+.side-item.active {
+  background: #111 !important;
+  color: #fff !important;
+  font-weight: 900;
+}
+
+.side-item.gray {
+  background: #e7e7e7;
+  font-weight: 900;
+}
+
+/* CENTER */
+.content {
+  background: #f1f1f1;
+  padding: 0;
+  overflow-y: auto;
+}
+
+/* NEWS BAR */
+.news-bar {
+  height: 24px;
+  background: var(--navdark);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid #09202c;
+}
+
+.news-left {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: #0a2635;
+  height: 100%;
+  padding: 0 10px;
+  font-weight: 900;
+  font-size: 13px;
+  border-right: 1px solid #08202c;
+}
+
+.news-scroll {
+  flex: 1;
+  height: 100%;
+  overflow: hidden;
+  position: relative;
+}
+
+.news-track {
+  display: flex;
+  white-space: nowrap;
+  position: absolute;
+  height: 100%;
+  align-items: center;
+  animation: mar 18s linear infinite;
+}
+
+.news-track span {
+  padding: 0 60px;
+  font-weight: 600;
+  font-size: 13px;
+}
+
+@keyframes mar {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+/* UPCOMING LIST */
+.upcoming-list {
+  display: flex;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  background: #fff;
+  border-bottom: 1px solid var(--line);
+}
+
+.upcoming-item {
+  flex: 1;
+  border-right: 1px solid var(--line);
+}
+
+.upcoming-item a {
+  display: flex;
+  flex-direction: column;
+  padding: 10px;
+  color: #111;
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: bold;
+}
+
+.upcoming-item .time {
+  color: var(--blue);
+  font-size: 11px;
+  margin-bottom: 2px;
+}
+
+.upcoming-list-col3 {
+  flex: 1.5;
+  padding: 10px;
+}
+
+.upcoming-list-col3 h4 {
+  margin: 0 0 5px;
+  font-size: 14px;
+  font-weight: bold;
+  color: #111;
+}
+
+.upcoming {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 5px;
+}
+
+.upcoming li a {
+  font-size: 11px;
+  color: var(--blue);
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.upcoming .time {
+  margin-right: 5px;
+}
+
+/* BANNER */
+.banner1 {
+  height: 160px;
+  background: url("../images/KV05.jpg") center/cover no-repeat; /* Simulated path */
+  background-color: #243a48;
+  border-bottom: 1px solid var(--line);
+}
+
+/* NEXT RACE BAR */
+.next-race {
+  background: #e9f3fb;
+  border-bottom: 1px solid var(--line);
+  padding: 6px 10px;
+  font-size: 12px;
+  font-weight: 700;
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.chip {
+  background: #d6e3ef;
+  padding: 3px 8px;
+  border-radius: 3px;
+  font-weight: 900;
+  font-size: 11px;
+}
+
+.next-links {
+  background: #fff;
+  padding: 6px 10px;
+  border-bottom: 1px solid var(--line);
+  font-size: 12px;
+}
+
+.next-links a {
+  color: var(--blue);
+  text-decoration: none;
+  font-weight: 700;
+  margin-right: 15px;
+}
+
+/* TABS */
+.tabs {
+  display: flex;
+  gap: 0;
+  padding: 10px 10px 0;
+  background: #f1f1f1;
+}
+
+.tab {
+  min-width: 111px;
+  padding: 7px 18px;
+  border: 1px solid #9aa9b5;
+  border-bottom: 0;
+  background: #fff;
+  font-size: 13px;
+  font-weight: 900;
+  cursor: pointer;
+  color: #111;
+  border-radius: 4px 4px 0 0;
+  margin-right: 2px;
+  text-align: center;
+}
+
+.tab.active {
+  background: #2c3f4d;
+  color: #fff;
+}
+
+/* PANELS */
+.panel {
+  margin: 10px;
+  border: 1px solid #9aa9b5;
+  background: #fff;
+}
+
+.panel-title {
+  background: #2c3f4d;
+  color: #fff;
+  font-weight: 900;
+  padding: 7px 10px;
+  font-size: 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.panel-content {
+  padding: 8px 10px;
+  border-bottom: 1px solid #e6e6e6;
+}
+
+.panel-content:last-child {
+  border-bottom: none;
+}
+
+.race-link {
+  color: #1678c2;
+  font-weight: 700;
+  text-decoration: none;
+  font-size: 12px;
+  display: block;
+  margin-bottom: 4px;
+}
+
+.race-link--active {
+  color: #000;
+}
+
+.race-match-odds {
+  display: block;
+  padding: 4px 0;
+  color: #1678c2;
+  text-decoration: none;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.times {
+  margin-top: 6px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  align-items: center;
+}
+
+.time-link {
+  color: #1678c2;
+  font-size: 11px;
+  text-decoration: none;
+  font-weight: 700;
+}
+
+.time-box {
+  background: #56b344;
+  color: #fff;
+  padding: 3px 6px;
+  border-radius: 3px;
+  font-size: 11px;
+  font-weight: 900;
+}
+
+/* BETSLIP */
+.betslip {
+  border-left: 1px solid var(--line);
+  background: #fff;
+  height: 100%;
+  overflow-y: auto;
+}
+
+/* Responsive */
+@media screen and (max-width: 1200px) {
+  .page.horse-racing-page {
+    grid-template-columns: 200px 1fr 250px;
+  }
+}
+
+@media screen and (max-width: 992px) {
+  .page.horse-racing-page {
+    grid-template-columns: 180px 1fr;
+  }
+  .betslip {
+    display: none;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .page.horse-racing-page {
+    grid-template-columns: 1fr;
+  }
+  .sidebar {
+    display: none;
+  }
+  .mobile-h3 {
+    display: block;
+    padding: 10px;
+    margin: 0;
+    font-size: 16px;
+    background: #fff;
+    border-bottom: 1px solid #eee;
+  }
+}
