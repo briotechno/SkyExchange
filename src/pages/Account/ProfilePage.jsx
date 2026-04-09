@@ -1,7 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
 import AccountLayout from './AccountLayout';
+import ChangePasswordModal from '../../components/ChangePasswordModal';
 
 function ProfilePage() {
+  const [isPasswordModalOpen, setPasswordModalOpen] = useState(false);
+
   return (
     <AccountLayout title="Account Details">
       <div className="details-section">
@@ -26,7 +29,7 @@ function ProfilePage() {
                   <td>Password</td>
                   <td style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                     ********************************
-                    <a href="#" className="edit-link">Edit ✎</a>
+                    <a href="#" className="edit-link" onClick={(e) => { e.preventDefault(); setPasswordModalOpen(true); }}>Edit ✎</a>
                   </td>
                 </tr>
               </tbody>
@@ -96,6 +99,11 @@ function ProfilePage() {
           </div>
         </div>
       </div>
+
+      <ChangePasswordModal 
+        isOpen={isPasswordModalOpen} 
+        onClose={() => setPasswordModalOpen(false)} 
+      />
     </AccountLayout>
   );
 }

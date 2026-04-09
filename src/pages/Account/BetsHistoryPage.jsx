@@ -1,11 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import AccountLayout from './AccountLayout';
+import { useAuthStore } from '../../store/authStore';
+import { bettingController } from '../../controllers';
 
 function BetsHistoryPage() {
   const [activeTab, setActiveTab] = useState('Current Bets');
   const [activeSubTab, setActiveSubTab] = useState('Exchange');
+  const [bets, setBets] = useState([]);
+  const [loading, setLoading] = useState(false);
+  
   const location = useLocation();
+  const { loginToken, isLoggedIn } = useAuthStore();
 
   useEffect(() => {
     const searchParams = new URLSearchParams(location.search);
@@ -19,6 +25,30 @@ function BetsHistoryPage() {
       setActiveTab('Current Bets');
     }
   }, [location.search]);
+
+  useEffect(() => {
+    if (isLoggedIn && loginToken) {
+      fetchBets();
+    }
+  }, [isLoggedIn, loginToken]);
+
+  const fetchBets = async () => {
+    try {
+      setLoading(true);
+      const res = await bettingController.getMyBets(loginToken);
+      if (res && typeof res === 'object' && !res.error) {
+        const betArray = Object.values(res).filter(item => typeof item === 'object' && item !== null);
+        setBets(betArray);
+      }
+    } catch (err) {
+      console.error('Failed to fetch bets:', err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const matchedBets = bets.filter(b => b.Type?.toLowerCase().includes('match') || String(b.IsMatched) === '1');
+  const unmatchedBets = bets.filter(b => !b.Type?.toLowerCase().includes('match') && String(b.IsMatched) !== '1');
 
   const renderCurrentBets = () => (
     <>
@@ -47,7 +77,7 @@ function BetsHistoryPage() {
       </div>
 
       <div className="unmatched-section">
-        <div className="section-title">Unmatched</div>
+        <div className="section-title">Unmatched {loading && <small>(Loading...)</small>}</div>
         <div className="data-table-wrapper">
           <table className="data-table balance-table">
             <thead>
@@ -64,9 +94,25 @@ function BetsHistoryPage() {
               </tr>
             </thead>
             <tbody>
-              <tr>
-                <td colSpan="9" style={{ padding: '15px' }}>You have no bets in this time period.</td>
-              </tr>
+              {unmatchedBets.length > 0 ? (
+                unmatchedBets.map((bet, idx) => (
+                  <tr key={idx}>
+                    <td style={{ textAlign: 'left' }}>{bet.Game || '-'}</td>
+                    <td style={{ textAlign: 'right' }}>{bet.Selection || '-'}</td>
+                    <td style={{ textAlign: 'center' }}>{bet.Type || bet.Side || '-'}</td>
+                    <td style={{ textAlign: 'center' }}>{bet.BetId || bet.Id || '-'}</td>
+                    <td style={{ textAlign: 'center' }}>{bet.Date || '-'}</td>
+                    <td style={{ textAlign: 'center' }}>{bet.Rate || '-'}</td>
+                    <td style={{ textAlign: 'center' }}>0</td>
+                    <td style={{ textAlign: 'center' }}>{bet.Stake || '-'}</td>
+                    <td style={{ textAlign: 'center' }}>-</td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan="9" style={{ padding: '15px' }}>You have no bets in this time period.</td>
+                </tr>
+              )}
             </tbody>
           </table>
         </div>
@@ -90,9 +136,25 @@ function BetsHistoryPage() {
               </tr>
             </thead>
             <tbody>
-              <tr>
-                <td colSpan="9" style={{ padding: '15px' }}>You have no bets in this time period.</td>
-              </tr>
+              {matchedBets.length > 0 ? (
+                matchedBets.map((bet, idx) => (
+                  <tr key={idx}>
+                    <td style={{ textAlign: 'left' }}>{bet.Game || '-'}</td>
+                    <td style={{ textAlign: 'right' }}>{bet.Selection || '-'}</td>
+                    <td style={{ textAlign: 'center' }}>{bet.Type || bet.Side || '-'}</td>
+                    <td style={{ textAlign: 'center' }}>{bet.BetId || bet.Id || '-'}</td>
+                    <td style={{ textAlign: 'center' }}>{bet.Date || '-'}</td>
+                    <td style={{ textAlign: 'center' }}>{bet.Rate || '-'}</td>
+                    <td style={{ textAlign: 'center' }}>{bet.Stake || '-'}</td>
+                    <td style={{ textAlign: 'center' }}>{bet.Rate || '-'}</td>
+                    <td style={{ textAlign: 'center' }}>{bet.Date || '-'}</td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan="9" style={{ padding: '15px' }}>You have no bets in this time period.</td>
+                </tr>
+              )}
             </tbody>
           </table>
         </div>
