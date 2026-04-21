@@ -236,7 +236,7 @@ This document serves as the high-fidelity specification for the Betting Platform
   ```
 
 ### 6. Market Rate (Live Rate) ✅
-**POST** `/liverate`
+**POST** `/liverate` 
 - **Request:** `{"MarketId":"1.253852370,1.253802473"}`
 - **Response:** Complex nested object keyed by `MarketId` containing status, runners, and odds (availableToBack, availableToLay).
 
