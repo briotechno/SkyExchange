@@ -12,4 +12,5 @@ export const bettingController = {
   cashout: (loginToken, eid) => fetchAPI('/cashout', { LoginToken: loginToken, Eid: eid }),
   getMyBets: (loginToken) => fetchAPI('/mybets', { LoginToken: loginToken }),
   getBetsByGame: (loginToken, gid) => fetchAPI('/sidebetlist', { LoginToken: loginToken, gid }),
+  getProfitLoss: (loginToken, sdate, edate) => fetchAPI('/pl', { LoginToken: loginToken, sdate, edate }),
 };

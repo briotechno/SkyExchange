@@ -41,14 +41,32 @@ function DesktopHeader({ onVirtualCricketClick }) {
     }
   };
 
-  const handleSearch = async (val) => {
-    setSearchInput(val);
-    if (val.length < 3) {
-      setSearchResults([]);
+  useEffect(() => {
+    if (searchInput.length > 0) {
+      setSearchLoading(true);
+      setShowSearchResults(true);
+    } else {
+      setSearchLoading(false);
       setShowSearchResults(false);
-      return;
+      setSearchResults([]);
     }
 
+    const timer = setTimeout(() => {
+      if (searchInput.length >= 3) {
+        performSearch(searchInput);
+      } else {
+        setSearchResults([]);
+        // Keep loader visible if user is typing but less than 3 chars
+        if (searchInput.length > 0) {
+          setSearchLoading(false); // Stop loader if < 3 chars after debounce
+        }
+      }
+    }, 500);
+
+    return () => clearTimeout(timer);
+  }, [searchInput]);
+
+  const performSearch = async (val) => {
     if (!isLoggedIn || !loginToken) return;
 
     try {
@@ -127,6 +145,14 @@ function DesktopHeader({ onVirtualCricketClick }) {
 
   return (
     <>
+      <style>
+        {`
+          @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+          }
+        `}
+      </style>
       <div className="top">
         <div className="header full-wrap" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', paddingTop: 0 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
@@ -141,7 +167,7 @@ function DesktopHeader({ onVirtualCricketClick }) {
                   type="text"
                   placeholder="Search Events"
                   value={searchInput}
-                  onChange={(e) => handleSearch(e.target.value)}
+                  onChange={(e) => setSearchInput(e.target.value)}
                   onFocus={() => searchInput.length >= 3 && setShowSearchResults(true)}
                   onBlur={() => setTimeout(() => setShowSearchResults(false), 200)}
                 />
@@ -149,34 +175,70 @@ function DesktopHeader({ onVirtualCricketClick }) {
                   id="searchClear"
                   className="search-clear"
                   style={{ display: searchInput ? 'block' : 'none' }}
-                  onClick={() => handleSearch('')}
+                  onClick={() => setSearchInput('')}
                 ></button>
               </div>
-              {(showSearchResults || searchLoading) && (
-                <div id="searchResult" className="suggestion-wrap" style={{ display: 'block', maxHeight: '400px', overflowY: 'auto', position: 'absolute', top: '100%', left: 0, width: '100%', zIndex: 1100 }}>
-                  <ul id="searchList">
-                    {searchLoading && <li style={{ padding: '10px', color: '#fff' }}>Searching...</li>}
-                    {!searchLoading && searchResults.length === 0 && searchInput.length >= 3 && (
-                      <li id="noMatching">
-                        <p className="no-matching">No events found matching "{searchInput}"</p>
+              {showSearchResults && searchInput.length > 0 && (
+                <div 
+                  className="suggestion-dropdown" 
+                  style={{ 
+                    position: 'absolute', 
+                    top: '100%', 
+                    left: 0, 
+                    width: '350px', 
+                    background: '#fff', 
+                    border: '1px solid #ccc', 
+                    borderRadius: '4px', 
+                    boxShadow: '0 4px 15px rgba(0,0,0,0.2)', 
+                    zIndex: 1100, 
+                    marginTop: '5px',
+                    maxHeight: '400px',
+                    overflowY: 'auto'
+                  }}
+                >
+                  <ul style={{ listStyle: 'none', padding: '0', margin: '0' }}>
+                    {searchLoading && (
+                      <li style={{ padding: '12px', color: '#666', fontSize: '13px', display: 'flex', alignItems: 'center', gap: '10px' }}>
+                        <div className="spinner" style={{ width: '14px', height: '14px', border: '2px solid #ccc', borderTopColor: '#ffb400', borderRadius: '50%', animation: 'spin 0.8s linear infinite' }}></div>
+                        Searching...
                       </li>
                     )}
-                    {!searchLoading && searchResults.map((res, index) => (
-                      <li key={res.Gid || index} style={{ borderBottom: '1px solid #333' }}>
-                        <Link
-                          to={`/sports?type=${res.Type.toLowerCase()}&gid=${res.Gid}`}
-                          style={{ display: 'block', padding: '8px 12px', textDecoration: 'none' }}
-                          onClick={() => {
-                            setSearchInput('');
-                            setSearchResults([]);
-                            setShowSearchResults(false);
-                          }}
-                        >
-                          <p style={{ color: '#ff7a00', fontWeight: 'bold', margin: '0', fontSize: '13px' }}>{res.GameName}</p>
-                          <p style={{ color: '#aaa', margin: '0', fontSize: '11px' }}>{res.Datetime} | {res.Type}</p>
-                        </Link>
-                      </li>
-                    ))}
+                    {!searchLoading && searchInput.length < 3 && (
+                      <li style={{ padding: '12px', color: '#999', fontSize: '12px' }}>Please enter at least 3 characters...</li>
+                    )}
+                    {!searchLoading && searchInput.length >= 3 && searchResults.length === 0 && (
+                      <li style={{ padding: '12px', color: '#999', fontSize: '13px' }}>No events found for "{searchInput}"</li>
+                    )}
+                    {!searchLoading && searchInput.length >= 3 && searchResults.map((res, index) => {
+                      // Extract time from Datetime (e.g., "2022-04-13 19:30:00" -> "19:30")
+                      const time = res.Datetime ? res.Datetime.split(' ')[1]?.substring(0, 5) : '--:--';
+                      return (
+                        <li key={res.Gid || index} style={{ borderBottom: '1px solid #f0f0f0' }}>
+                          <Link
+                            to={`/sports?type=${res.Type.toLowerCase()}&gid=${res.Gid}`}
+                            style={{ 
+                              display: 'flex', 
+                              alignItems: 'center', 
+                              gap: '12px', 
+                              padding: '10px 15px', 
+                              textDecoration: 'none', 
+                              color: '#333', 
+                              transition: 'background 0.2s' 
+                            }}
+                            onMouseEnter={(e) => e.currentTarget.style.background = '#f5f5f5'}
+                            onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}
+                            onClick={() => {
+                              setSearchInput('');
+                              setSearchResults([]);
+                              setShowSearchResults(false);
+                            }}
+                          >
+                            <span style={{ fontSize: '13px', color: '#444', fontWeight: 'bold', minWidth: '40px' }}>{time}</span>
+                            <span style={{ fontSize: '13px', color: '#333' }}>{res.GameName}</span>
+                          </Link>
+                        </li>
+                      );
+                    })}
                   </ul>
                 </div>
               )}

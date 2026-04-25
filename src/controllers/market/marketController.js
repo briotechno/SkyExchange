@@ -13,4 +13,6 @@ export const marketController = {
   getMultiMarketList: (loginToken) => fetchAPI('/multimarket', { LoginToken: loginToken }),
   getMultiMarketRate: (marketId, ids) => fetchAPI('/multimarketrate', { MarketId: marketId, Ids: ids }),
   getMarketAnalysis: (loginToken) => fetchAPI('/marketanay', { LoginToken: loginToken }),
+  getHomeBanners: (type = 'Web') => fetchAPI('/homebanners', { Type: type }),
+  getNews: (token = '7034X2N0GES6JSmqnVZneMgKWhvrYOGPUwoGnHsGNVCM ') => fetchAPI('/news', { LoginToken: token }),
 };
