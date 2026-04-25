@@ -12,7 +12,7 @@ export async function fetchAPI(endpoint, body = {}) {
   // If we are calling it as FETCH_API='/namecheck', we append it to BASE_URL
   const url = `${API_BASE_URL}${endpoint}`;
   const jsonBody = JSON.stringify(body);
-  
+
   // 🔐 Generate Hash (HMAC SHA256 → Base64)
   const hash = CryptoJS.HmacSHA256(jsonBody, API_SECRET).toString(CryptoJS.enc.Base64);
 
@@ -27,15 +27,15 @@ export async function fetchAPI(endpoint, body = {}) {
     });
 
     if (!response.ok) {
-        // Handle non-200 responses
-        return {
-            error: '1',
-            msg: `HTTP error! status: ${response.status}`,
-        };
+      // Handle non-200 responses
+      return {
+        error: '1',
+        msg: `HTTP error! status: ${response.status}`,
+      };
     }
 
     const data = await response.json();
-    
+
     // Normalization check
     return data;
   } catch (error) {
