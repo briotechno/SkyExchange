@@ -1,13 +1,9 @@
 import React from 'react';
 
-/**
- * OddsTable Component
- * 
- * Renders the Match Odds table with precise dimensions, typography, and rounded tabs.
- */
 const OddsTable = ({ marketData, onBetClick }) => {
   const oddsWidth = '114.688px';
   const uniformHeight = '35px';
+
   const baseFont = {
     fontFamily: 'Tahoma, Helvetica, sans-serif',
     fontSize: '12px',
@@ -30,82 +26,173 @@ const OddsTable = ({ marketData, onBetClick }) => {
     ...baseFont
   });
 
-  const headerTabStyle = (bgColor, textColor) => ({
-    position: 'absolute',
-    bottom: 0,
-    left: '2px', // Slight offset to show the rounded edge better
-    right: '2px',
-    height: '24px',
+  const headerTabStyle = (bgColor, textColor, isBack) => ({
+    height: '20px',
+    width: '100%',
     backgroundColor: bgColor,
-    borderTopLeftRadius: '5px', // "Lil radius" as requested
-    borderTopRightRadius: '5px',
     color: textColor || '#1e1e1e',
     fontWeight: '700',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    fontSize: '12px',
-    border: `1px solid rgba(0,0,0,0.05)`,
-    borderBottom: 'none'
+    fontSize: '11px',
+    marginTop: '0px',
+    border: '1px solid rgba(0,0,0,0.08)',
+    borderBottom: 'none',
+    clipPath: isBack
+      ? 'polygon(10px 0, 100% 0, 100% 100%, 0 100%)'
+      : 'polygon(0 0, calc(100% - 10px) 0, 100% 100%, 0 100%)'
   });
 
   return (
-    <div className="w-full" style={{ width: '100%', marginBottom: '16px' }}>
-      <table className="w-full" style={{
+    <div style={{ width: '100%', marginBottom: '16px' }}>
+
+      {/* MATCH ODDS HEADER */}
+      <div style={{
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        background: '#fff',
+        border: '1px solid #d9d9d9',
+        borderBottom: 'none',
+        height: '42px',
+        position: 'relative', // Added for potential absolute centering if needed
+        ...baseFont
+      }}>
+        {/* Left Section */}
+        <div style={{ display: 'flex', alignItems: 'center', height: '100%' }}>
+          <div style={{
+            background: '#cfd8dc',
+            height: '100%',
+            display: 'flex',
+            alignItems: 'center',
+            padding: '0 12px',
+            fontWeight: '700',
+            color: '#2b3a47'
+          }}>
+            Match Odds
+          </div>
+
+          <div style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '5px',
+            color: '#2aa84a',
+            fontWeight: '600',
+            marginLeft: '15px'
+          }}>
+            <span style={{ width: '12px', height: '12px' }}>
+              <img src="/icons/in-play.svg" alt="" style={{ width: '100%' }} />
+            </span>
+            In-Play
+          </div>
+        </div>
+
+        {/* Center Section (Max 8000) */}
+        <div style={{
+          position: 'absolute',
+          left: '50%',
+          transform: 'translateX(-50%)',
+          background: '#cfd8dc',
+          padding: '2px 10px',
+          borderRadius: '4px',
+          fontFamily: 'Tahoma, Helvetica, sans-serif',
+          fontSize: '12px',
+          lineHeight: '16px',
+          fontWeight: '400',
+          letterSpacing: 'normal',
+          color: '#1E1E1E'
+        }}>
+          Max 8000
+        </div>
+
+        {/* Right Section */}
+        <div style={{ display: 'flex', gap: '15px', alignItems: 'center', paddingRight: '10px' }}>
+          <div style={{ color: '#2b3a47', fontWeight: '400' }}>
+            Matched <span style={{ fontWeight: '700' }}>PTH 676,521,907</span>
+          </div>
+
+          <div style={{
+            background: '#1f6f8b',
+            color: '#fff',
+            padding: '2px 8px',
+            borderRadius: '3px',
+            fontWeight: '700',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '5px'
+          }}>
+            <span style={{ fontSize: '14px' }}>📺</span>
+            Live
+          </div>
+        </div>
+      </div>
+
+      {/* TABLE */}
+      <table style={{
         width: '100%',
         borderCollapse: 'collapse',
         backgroundColor: '#e4e7ed',
         border: '1px solid #d9d9d9'
       }}>
+
         <thead>
-          <tr style={{ height: '36px', color: '#707c8a', borderBottom: '1px solid #d9d9d9', ...baseFont }}>
-            {/* Col 1: Selection Name Header */}
-            <th style={{ textAlign: 'left', paddingLeft: '12px', fontWeight: '400', backgroundColor: '#e4e7ed' }}>
+          <tr style={{
+            height: '32px',
+            color: '#1e1e1e',
+            borderBottom: '1px solid #d9d9d9',
+            ...baseFont
+          }}>
+            <th style={{ textAlign: 'left', paddingLeft: '12px' }}>
               2 selections
             </th>
-
-            {/* 6 Odds Headers */}
-            <th style={{ width: oddsWidth, textAlign: 'center', fontWeight: '700', color: '#2b3a47', backgroundColor: '#e4e7ed' }}>
+            <th style={{ width: oddsWidth, textAlign: 'center', fontWeight: '700' }}>
               100.7%
             </th>
-            <th style={{ width: oddsWidth, backgroundColor: '#e4e7ed' }}></th>
-            <th style={{ width: oddsWidth, position: 'relative', padding: 0, backgroundColor: '#e4e7ed' }}>
-              <div style={headerTabStyle('#72bbef', '#1e1e1e')}>Back all</div>
+            <th style={{ width: oddsWidth }}></th>
+            <th style={{ width: oddsWidth, padding: 0, verticalAlign: 'bottom' }}>
+              <div style={{ overflow: 'hidden', borderTopLeftRadius: '6px' }}>
+                <div style={headerTabStyle('#72bbef', '#1e1e1e', true)}>
+                  Back all
+                </div>
+              </div>
             </th>
-            <th style={{ width: oddsWidth, position: 'relative', padding: 0, backgroundColor: '#e4e7ed' }}>
-              <div style={headerTabStyle('#faa9ba', '#1e1e1e')}>Lay all</div>
+            <th style={{ width: oddsWidth, padding: 0, verticalAlign: 'bottom' }}>
+              <div style={{ overflow: 'hidden', borderTopRightRadius: '6px' }}>
+                <div style={headerTabStyle('#faa9ba', '#1e1e1e', false)}>
+                  Lay all
+                </div>
+              </div>
             </th>
-            <th style={{ width: oddsWidth, backgroundColor: '#e4e7ed' }}></th>
-            <th style={{ width: oddsWidth, textAlign: 'right', paddingRight: '12px', fontWeight: '700', color: '#2b3a47', backgroundColor: '#e4e7ed' }}>
+            <th style={{ width: oddsWidth }}></th>
+            <th style={{ width: oddsWidth, textAlign: 'right', paddingRight: '12px', fontWeight: '700' }}>
               99%
             </th>
           </tr>
         </thead>
+
         <tbody style={{ backgroundColor: 'white' }}>
-          {/* Canada Row */}
-          <tr style={{ height: uniformHeight, borderBottom: '1px solid #d9d9d9' }}>
-            <td style={{ paddingLeft: '16px', color: '#2b3a47', borderRight: '1px solid #d9d9d9', ...baseFont, fontWeight: '700' }}>
+          <tr style={{ height: uniformHeight, borderBottom: '1px solid #e4e7ed' }}>
+            <td style={{ paddingLeft: '16px', fontWeight: '700', color: '#2b3a47', borderRight: '1px solid #e4e7ed' }}>
               Canada
             </td>
-            {/* Back Section */}
-            <td style={{ ...cellStyle('#e2f2fe') }}>
+            <td style={cellStyle('#e2f2fe')}>
               <div style={{ fontWeight: '700' }}>1.17</div>
               <div style={{ fontSize: '10px', color: '#707c8a' }}>213K</div>
             </td>
-            <td style={{ ...cellStyle('#add8f4') }}>
+            <td style={cellStyle('#add8f4')}>
               <div style={{ fontWeight: '700' }}>1.18</div>
               <div style={{ fontSize: '10px', color: '#707c8a' }}>24,332</div>
             </td>
-            <td style={{ ...cellStyle('#72bbef') }}>
+            <td style={cellStyle('#72bbef')}>
               <div style={{ fontWeight: '700' }}>1.19</div>
               <div style={{ fontSize: '10px' }}>24,872</div>
             </td>
-            {/* Lay Section */}
-            <td style={{ ...cellStyle('#faa9ba') }}>
+            <td style={cellStyle('#faa9ba')}>
               <div style={{ fontWeight: '700' }}>1.2</div>
               <div style={{ fontSize: '10px' }}>63,093</div>
             </td>
-            <td style={{ ...cellStyle('#fbcbd5') }}>
+            <td style={cellStyle('#fbcbd5')}>
               <div style={{ fontWeight: '700' }}>1.21</div>
               <div style={{ fontSize: '10px', color: '#707c8a' }}>85,088</div>
             </td>
@@ -115,34 +202,31 @@ const OddsTable = ({ marketData, onBetClick }) => {
             </td>
           </tr>
 
-          {/* UAE Row */}
           <tr style={{ height: uniformHeight }}>
-            <td style={{ paddingLeft: '16px', color: '#2b3a47', borderRight: '1px solid #d9d9d9', ...baseFont, fontWeight: '700' }}>
+            <td style={{ paddingLeft: '16px', fontWeight: '700', color: '#2b3a47', borderRight: '1px solid #e4e7ed' }}>
               United Arab Emirates
             </td>
-            {/* Back Section */}
-            <td style={{ ...cellStyle('#e2f2fe'), borderBottom: 'none' }}>
+            <td style={cellStyle('#e2f2fe')}>
               <div style={{ fontWeight: '700' }}>5.6</div>
               <div style={{ fontSize: '10px', color: '#707c8a' }}>188</div>
             </td>
-            <td style={{ ...cellStyle('#add8f4'), borderBottom: 'none' }}>
+            <td style={cellStyle('#add8f4')}>
               <div style={{ fontWeight: '700' }}>5.7</div>
               <div style={{ fontSize: '10px', color: '#707c8a' }}>18,483</div>
             </td>
-            <td style={{ ...cellStyle('#72bbef'), borderBottom: 'none' }}>
+            <td style={cellStyle('#72bbef')}>
               <div style={{ fontWeight: '700' }}>6</div>
               <div style={{ fontSize: '10px' }}>12,670</div>
             </td>
-            {/* Lay Section */}
-            <td style={{ ...cellStyle('#faa9ba'), borderBottom: 'none' }}>
+            <td style={cellStyle('#faa9ba')}>
               <div style={{ fontWeight: '700' }}>6.4</div>
               <div style={{ fontSize: '10px' }}>4,680</div>
             </td>
-            <td style={{ ...cellStyle('#fbcbd5'), borderBottom: 'none' }}>
+            <td style={cellStyle('#fbcbd5')}>
               <div style={{ fontWeight: '700' }}>6.6</div>
               <div style={{ fontSize: '10px', color: '#707c8a' }}>4,347</div>
             </td>
-            <td style={{ ...cellStyle('#fde4ea'), borderBottom: 'none', borderRight: 'none' }}>
+            <td style={{ ...cellStyle('#fde4ea'), borderRight: 'none' }}>
               <div style={{ fontWeight: '700' }}>6.8</div>
               <div style={{ fontSize: '10px', color: '#707c8a' }}>5</div>
             </td>
