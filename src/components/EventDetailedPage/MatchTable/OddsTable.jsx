@@ -1,8 +1,17 @@
 import React from 'react';
+import { getRunnerRates, getMarketStatus } from '../../../utils/rateRefiner';
 
-const OddsTable = ({ marketData, onBetClick, marketName = 'Match Odds' }) => {
+const OddsTable = ({ marketData, onBetClick, marketName = 'Match Odds', liveRates = {} }) => {
   const oddsWidth = '114.688px';
   const uniformHeight = '35px';
+
+  // Market ID for rates
+  const marketId = (marketData?.MarketId?.toString().startsWith('1.') || marketData?.marketid?.toString().startsWith('1.'))
+    ? (marketData?.MarketId || marketData?.marketid)
+    : (marketData?.eid || marketData?.MarketId || marketData?.marketid);
+
+  const rateData = liveRates[marketId];
+  const { isSuspended: isMarketSuspended, msg: marketSuspensionMsg } = getMarketStatus(rateData, marketData?.Type);
 
   const baseFont = {
     fontFamily: 'Tahoma, Helvetica, sans-serif',
@@ -23,8 +32,30 @@ const OddsTable = ({ marketData, onBetClick, marketName = 'Match Odds' }) => {
     borderBottom: '1px solid #fff',
     verticalAlign: 'middle',
     padding: '2px 0',
+    position: 'relative',
     ...baseFont
   });
+
+  const suspensionOverlayStyle = {
+    position: 'absolute',
+    inset: 0,
+    backgroundColor: 'rgba(224, 224, 224, 0.85)',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    zIndex: 10,
+    pointerEvents: 'none'
+  };
+
+  const suspensionTextStyle = {
+    color: '#0d47a1',
+    fontSize: '9px',
+    fontWeight: '900',
+    textTransform: 'uppercase',
+    textAlign: 'center',
+    lineHeight: '1',
+    whiteSpace: 'nowrap'
+  };
 
   const headerTabStyle = (bgColor, textColor, isBack) => ({
     height: '20px',
@@ -136,14 +167,15 @@ const OddsTable = ({ marketData, onBetClick, marketName = 'Match Odds' }) => {
             height: '32px',
             color: '#1e1e1e',
             borderBottom: '1px solid #d9d9d9',
+            position: 'relative',
             ...baseFont
           }}>
-            <th style={{ textAlign: 'left', paddingLeft: '12px' }}>
+            <th style={{ textAlign: 'left', paddingLeft: '12px', width: 'auto' }}>
               {Object.keys(marketData?.runners || {}).length} selections
             </th>
-            <th style={{ width: oddsWidth, textAlign: 'center', fontWeight: '700' }}>
-              
-            </th>
+            
+            {/* 6 Fixed Rate Columns */}
+            <th style={{ width: oddsWidth }}></th>
             <th style={{ width: oddsWidth }}></th>
             <th style={{ width: oddsWidth, padding: 0, verticalAlign: 'bottom' }}>
               <div style={{ overflow: 'hidden', borderTopLeftRadius: '6px' }}>
@@ -160,53 +192,93 @@ const OddsTable = ({ marketData, onBetClick, marketName = 'Match Odds' }) => {
               </div>
             </th>
             <th style={{ width: oddsWidth }}></th>
-            <th style={{ width: 'auto', textAlign: 'right', paddingRight: '12px', fontWeight: '700' }}>
-              <div style={{ display: 'flex', gap: '8px', justifyContent: 'flex-end', alignItems: 'center' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '2px', fontSize: '11px' }}>
-                  <span style={{ background: '#4b5965', color: '#fff', padding: '1px 4px', borderRadius: '2px', fontSize: '10px' }}>Min</span>
-                  <span>{marketData?.min || '0'}</span>
-                </div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '2px', fontSize: '11px' }}>
-                  <span style={{ background: '#4b5965', color: '#fff', padding: '1px 4px', borderRadius: '2px', fontSize: '10px' }}>Max</span>
-                  <span>{marketData?.max || '0'}</span>
-                </div>
+            <th style={{ width: oddsWidth }}></th>
+
+            {/* Floating Min/Max on the right of the header */}
+            <div style={{ 
+              position: 'absolute', 
+              right: '12px', 
+              top: '50%', 
+              transform: 'translateY(-50%)',
+              display: 'flex', 
+              gap: '8px', 
+              alignItems: 'center',
+              zIndex: 5
+            }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '2px', fontSize: '11px' }}>
+                <span style={{ background: '#4b5965', color: '#fff', padding: '1px 4px', borderRadius: '2px', fontSize: '10px' }}>Min</span>
+                <span style={{ fontWeight: '700' }}>{marketData?.min || '0'}</span>
               </div>
-            </th>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '2px', fontSize: '11px' }}>
+                <span style={{ background: '#4b5965', color: '#fff', padding: '1px 4px', borderRadius: '2px', fontSize: '10px' }}>Max</span>
+                <span style={{ fontWeight: '700' }}>{marketData?.max || '0'}</span>
+              </div>
+            </div>
           </tr>
         </thead>
 
         <tbody style={{ backgroundColor: 'white' }}>
-          {Object.values(marketData?.runners || {}).map((runner, idx) => (
-            <tr key={idx} style={{ height: uniformHeight, borderBottom: '1px solid #e4e7ed' }}>
-              <td style={{ paddingLeft: '16px', fontWeight: '700', color: '#2b3a47', borderRight: '1px solid #e4e7ed' }}>
-                {runner.RunnerName}
-              </td>
-              <td style={cellStyle('#e2f2fe')} onClick={() => onBetClick(runner.RunnerName, 'back', 0)}>
-                <div style={{ fontWeight: '700' }}>-</div>
-                <div style={{ fontSize: '10px', color: '#707c8a' }}>-</div>
-              </td>
-              <td style={cellStyle('#add8f4')} onClick={() => onBetClick(runner.RunnerName, 'back', 0)}>
-                <div style={{ fontWeight: '700' }}>-</div>
-                <div style={{ fontSize: '10px', color: '#707c8a' }}>-</div>
-              </td>
-              <td style={cellStyle('#72bbef')} onClick={() => onBetClick(runner.RunnerName, 'back', 0)}>
-                <div style={{ fontWeight: '700' }}>-</div>
-                <div style={{ fontSize: '10px' }}>-</div>
-              </td>
-              <td style={cellStyle('#faa9ba')} onClick={() => onBetClick(runner.RunnerName, 'lay', 0)}>
-                <div style={{ fontWeight: '700' }}>-</div>
-                <div style={{ fontSize: '10px' }}>-</div>
-              </td>
-              <td style={cellStyle('#fbcbd5')} onClick={() => onBetClick(runner.RunnerName, 'lay', 0)}>
-                <div style={{ fontWeight: '700' }}>-</div>
-                <div style={{ fontSize: '10px', color: '#707c8a' }}>-</div>
-              </td>
-              <td style={{ ...cellStyle('#fde4ea'), borderRight: 'none' }} onClick={() => onBetClick(runner.RunnerName, 'lay', 0)}>
-                <div style={{ fontWeight: '700' }}>-</div>
-                <div style={{ fontSize: '10px', color: '#707c8a' }}>-</div>
-              </td>
-            </tr>
-          ))}
+          {Object.values(marketData?.runners || {}).map((runner, idx) => {
+            const runnerId = runner.selectionId || runner.SelectionId || runner.id || idx;
+            const rates = getRunnerRates(rateData, runnerId, idx, marketData?.Type);
+            const isSuspended = isMarketSuspended || rates?.isRunnerSuspended;
+            const suspensionMsg = rates?.suspensionMsg || marketSuspensionMsg;
+
+            return (
+              <tr key={idx} style={{ height: uniformHeight, borderBottom: '1px solid #e4e7ed' }}>
+                <td style={{ paddingLeft: '16px', fontWeight: '700', color: '#2b3a47', borderRight: '1px solid #e4e7ed' }}>
+                  {runner.RunnerName}
+                </td>
+
+                <td colSpan={6} style={{ padding: 0, position: 'relative' }}>
+                  <div style={{ display: 'flex', width: '100%', height: uniformHeight }}>
+                    {/* Back 3 */}
+                    <div style={cellStyle('#e2f2fe')} onClick={() => !isSuspended && onBetClick(runner.RunnerName, 'back', rates?.back?.p3)}>
+                      <div style={{ fontWeight: '700' }}>{rates?.back?.p3 || '-'}</div>
+                      <div style={{ fontSize: '10px', color: '#707c8a' }}>{rates?.back?.v3 || '-'}</div>
+                    </div>
+                    
+                    {/* Back 2 */}
+                    <div style={cellStyle('#add8f4')} onClick={() => !isSuspended && onBetClick(runner.RunnerName, 'back', rates?.back?.p2)}>
+                      <div style={{ fontWeight: '700' }}>{rates?.back?.p2 || '-'}</div>
+                      <div style={{ fontSize: '10px', color: '#707c8a' }}>{rates?.back?.v2 || '-'}</div>
+                    </div>
+                    
+                    {/* Back 1 */}
+                    <div style={cellStyle('#72bbef')} onClick={() => !isSuspended && onBetClick(runner.RunnerName, 'back', rates?.back?.p1)}>
+                      <div style={{ fontWeight: '700' }}>{rates?.back?.p1 || '-'}</div>
+                      <div style={{ fontSize: '10px' }}>{rates?.back?.v1 || '-'}</div>
+                    </div>
+                    
+                    {/* Lay 1 */}
+                    <div style={cellStyle('#faa9ba')} onClick={() => !isSuspended && onBetClick(runner.RunnerName, 'lay', rates?.lay?.p1)}>
+                      <div style={{ fontWeight: '700' }}>{rates?.lay?.p1 || '-'}</div>
+                      <div style={{ fontSize: '10px' }}>{rates?.lay?.v1 || '-'}</div>
+                    </div>
+                    
+                    {/* Lay 2 */}
+                    <div style={cellStyle('#fbcbd5')} onClick={() => !isSuspended && onBetClick(runner.RunnerName, 'lay', rates?.lay?.p2)}>
+                      <div style={{ fontWeight: '700' }}>{rates?.lay?.p2 || '-'}</div>
+                      <div style={{ fontSize: '10px', color: '#707c8a' }}>{rates?.lay?.v2 || '-'}</div>
+                    </div>
+                    
+                    {/* Lay 3 */}
+                    <div style={{ ...cellStyle('#fde4ea'), borderRight: 'none' }} onClick={() => !isSuspended && onBetClick(runner.RunnerName, 'lay', rates?.lay?.p3)}>
+                      <div style={{ fontWeight: '700' }}>{rates?.lay?.p3 || '-'}</div>
+                      <div style={{ fontSize: '10px', color: '#707c8a' }}>{rates?.lay?.v3 || '-'}</div>
+                    </div>
+
+                    {/* Single Suspension Overlay across all 6 cells */}
+                    {isSuspended && (
+                      <div style={suspensionOverlayStyle}>
+                        <span style={suspensionTextStyle}>{suspensionMsg}</span>
+                      </div>
+                    )}
+                  </div>
+                </td>
+              </tr>
+            );
+          })}
         </tbody>
       </table>
     </div>

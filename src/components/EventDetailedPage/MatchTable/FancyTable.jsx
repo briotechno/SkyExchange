@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { getRunnerRates, getMarketStatus } from '../../../utils/rateRefiner';
 
 /**
  * FancyTable Component
@@ -19,12 +20,12 @@ const DEMO_MARKETS = [
   { id: 3, name: '6 Over Run UAE', no: 42, noRate: 100, yes: 44, yesRate: 100, min: '1.00', max: '300.00' },
 ];
 
-const FancyTable = ({ fancyData, onBetClick }) => {
+const FancyTable = ({ fancyData, onBetClick, liveRates = {} }) => {
   const [activeTab, setActiveTab] = useState('All');
 
   const allMarkets = fancyData && fancyData.length > 0 
     ? fancyData.map(m => ({
-        id: m.eid,
+        id: m.eid || m.MarketId || m.marketid,
         name: m.name,
         no: '-',
         noRate: '-',
@@ -41,17 +42,35 @@ const FancyTable = ({ fancyData, onBetClick }) => {
     if (activeTab === 'Ball by Ball') return m.subType === 'SINGLE_OVER';
     if (activeTab === 'Odd/Even') return m.name?.toLowerCase().includes('odd run bhav');
     if (activeTab === 'Fancy') {
-      // Fancy usually includes OVERS, BATSMAN and general ones, but excludes Ball by Ball and Odd/Even
       const isBallByBall = m.subType === 'SINGLE_OVER';
       const isOddEven = m.name?.toLowerCase().includes('odd run bhav');
       return !isBallByBall && !isOddEven;
     }
-    // Khadda and Lottery might be specific naming patterns if they exist in the data
     if (activeTab === 'Khadda') return m.name?.toLowerCase().includes('khadda');
     if (activeTab === 'Lottery') return m.name?.toLowerCase().includes('lottery');
-    
     return false;
   });
+
+  const suspensionOverlayStyle = {
+    position: 'absolute',
+    inset: 0,
+    backgroundColor: 'rgba(224, 224, 224, 0.9)',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    zIndex: 10,
+    pointerEvents: 'none'
+  };
+
+  const suspensionTextStyle = {
+    color: '#0d47a1',
+    fontSize: '9px',
+    fontWeight: '900',
+    textTransform: 'uppercase',
+    textAlign: 'center',
+    lineHeight: '1',
+    whiteSpace: 'nowrap'
+  };
 
   return (
     <div style={{ fontFamily: 'Tahoma, Arial, sans-serif', fontSize: '13px', marginBottom: '8px' }}>
@@ -112,10 +131,9 @@ const FancyTable = ({ fancyData, onBetClick }) => {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        padding: '6px 8px', // Symmetrical padding for vertical centering
+        padding: '6px 8px',
         minHeight: '32px',
       }}>
-        {/* Auto-width pill container: rgba(255,255,255,0.5), border-radius 5px */}
         <ul style={{
           display: 'flex',
           alignItems: 'center',
@@ -123,11 +141,11 @@ const FancyTable = ({ fancyData, onBetClick }) => {
           width: 'auto',
           background: 'rgba(255, 255, 255, 0.5)',
           borderRadius: '5px',
-          margin: '0', // Removed asymmetrical margin
+          margin: '0',
           padding: '0',
           listStyle: 'none',
           gap: '0',
-          height: '24px', // Fixed height to prevent shaking
+          height: '24px',
         }}>
           {FILTER_TABS.map((tab) => (
             <li
@@ -148,7 +166,7 @@ const FancyTable = ({ fancyData, onBetClick }) => {
                 justifyContent: 'center',
                 padding: '0 12px',
                 fontSize: '12px',
-                fontWeight: '600', // Constant font weight to prevent horizontal shaking
+                fontWeight: '600',
                 color: activeTab === tab ? '#1a8a8a' : '#076875',
                 whiteSpace: 'nowrap',
                 textDecoration: 'none',
@@ -184,135 +202,132 @@ const FancyTable = ({ fancyData, onBetClick }) => {
         background: '#f5f5f5',
         borderBottom: '1px solid #e0e0e0',
       }}>
-        {/* Left spacer (market name column) */}
         <div style={{ flex: 1, borderRight: '1px solid #e0e0e0' }} />
-        {/* Spacer to align with 3rd odd column */}
         <div style={{ width: '229.376px' }} />
-        {/* yes header */}
-        <div style={{
-          width: '114.688px',
-          textAlign: 'center',
-          fontWeight: 'bold',
-          fontSize: '12px',
-          color: '#333',
-          padding: '4px 0',
-        }}>
-          yes
-        </div>
-        {/* no header */}
-        <div style={{
-          width: '114.688px',
-          textAlign: 'center',
-          fontWeight: 'bold',
-          fontSize: '12px',
-          color: '#333',
-          padding: '4px 0',
-        }}>
+        <div style={{ width: '114.688px', textAlign: 'center', fontWeight: 'bold', fontSize: '12px', color: '#333', padding: '4px 0' }}>
           no
         </div>
-        {/* Min/Max spacer */}
+        <div style={{ width: '114.688px', textAlign: 'center', fontWeight: 'bold', fontSize: '12px', color: '#333', padding: '4px 0' }}>
+          yes
+        </div>
         <div style={{ width: '229.376px' }} />
       </div>
 
       {/* ── Market rows ── */}
       <div style={{ background: '#fff' }}>
-        {markets.map((market, idx) => (
-          <div
-            key={market.id ?? idx}
-            style={{
-              display: 'flex',
-              alignItems: 'stretch',
-              borderBottom: '1px solid #e8e8e8',
-              minHeight: '40px',
-            }}
-          >
-            {/* Market name */}
-            <div style={{
-              flex: 1,
-              display: 'flex',
-              alignItems: 'center',
-              padding: '4px 16px',
-              fontSize: '13px',
-              fontWeight: '600',
-              color: '#222',
-              borderRight: '1px solid #e8e8e8',
-            }}>
-              {market.name}
-            </div>
+        {markets.map((market, idx) => {
+          const rateData = liveRates[market.id];
+          const rates = getRunnerRates(rateData, null, 0, 'FANCY');
+          const { isSuspended, msg: suspensionMsg } = getMarketStatus(rateData, 'FANCY');
 
-            {/* Left spacer for alignment */}
-            <div style={{ width: '229.376px' }} />
-
-            {/* yes (Back / blue) cell */}
+          return (
             <div
-              onClick={() => onBetClick && onBetClick({ ...market, side: 'yes' })}
+              key={market.id ?? idx}
               style={{
-                width: '114.688px',
-                background: '#72bbef',
+                display: 'flex',
+                alignItems: 'stretch',
+                borderBottom: '1px solid #e8e8e8',
+                minHeight: '40px',
+              }}
+            >
+              {/* Market name */}
+              <div style={{
+                flex: 1,
+                display: 'flex',
+                alignItems: 'center',
+                padding: '4px 16px',
+                fontSize: '13px',
+                fontWeight: '600',
+                color: '#222',
+                borderRight: '1px solid #e8e8e8',
+              }}>
+                {market.name}
+              </div>
+
+              {/* Left spacer for alignment */}
+              <div style={{ width: '229.376px' }} />
+
+              {/* Betting Cells Container for single overlay */}
+              <div style={{ display: 'flex', position: 'relative' }}>
+                {/* no (Lay / pink) cell */}
+                <div
+                  onClick={() => !isSuspended && onBetClick && onBetClick({ name: market.name, side: 'no', price: rates?.lay?.p1 })}
+                  style={{
+                    width: '114.688px',
+                    background: '#faa9ba',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    cursor: 'pointer',
+                    borderLeft: '1px solid #fff',
+                    transition: 'opacity 0.15s',
+                  }}
+                >
+                  <span style={{ fontWeight: 'bold', fontSize: '14px', lineHeight: 1.1, color: '#000' }}>
+                    {rates?.lay?.p1 || '-'}
+                  </span>
+                  <span style={{ fontSize: '11px', color: '#444', lineHeight: 1.1 }}>
+                    {rates?.lay?.v1 || '-'}
+                  </span>
+                </div>
+
+                {/* yes (Back / blue) cell */}
+                <div
+                  onClick={() => !isSuspended && onBetClick && onBetClick({ name: market.name, side: 'yes', price: rates?.back?.p1 })}
+                  style={{
+                    width: '114.688px',
+                    background: '#72bbef',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    cursor: 'pointer',
+                    borderLeft: '1px solid #fff',
+                    transition: 'opacity 0.15s',
+                  }}
+                >
+                  <span style={{ fontWeight: 'bold', fontSize: '14px', lineHeight: 1.1, color: '#000' }}>
+                    {rates?.back?.p1 || '-'}
+                  </span>
+                  <span style={{ fontSize: '11px', color: '#444', lineHeight: 1.1 }}>
+                    {rates?.back?.v1 || '-'}
+                  </span>
+                </div>
+
+                {/* Single Suspension Overlay across both cells */}
+                {isSuspended && (
+                  <div style={{
+                    ...suspensionOverlayStyle,
+                    width: '100%',
+                    borderLeft: '1px solid #fff'
+                  }}>
+                    <span style={suspensionTextStyle}>{suspensionMsg}</span>
+                  </div>
+                )}
+              </div>
+
+              {/* Min/Max info */}
+              <div style={{
+                width: '229.376px',
                 display: 'flex',
                 flexDirection: 'column',
                 alignItems: 'center',
                 justifyContent: 'center',
-                cursor: 'pointer',
-                borderLeft: '1px solid #fff',
-                transition: 'opacity 0.15s',
-              }}
-              onMouseEnter={e => e.currentTarget.style.opacity = '0.82'}
-              onMouseLeave={e => e.currentTarget.style.opacity = '1'}
-            >
-              <span style={{ fontWeight: 'bold', fontSize: '14px', lineHeight: 1.1, color: '#000' }}>
-                {market.yes}
-              </span>
-              <span style={{ fontSize: '11px', color: '#444', lineHeight: 1.1 }}>
-                {market.yesRate}
-              </span>
+                padding: '0 4px',
+                fontSize: '10px',
+                color: '#777',
+                textAlign: 'center',
+                lineHeight: 1.4,
+              }}>
+                <span style={{ color: '#707c8a' }}>Min/Max</span>
+                <span style={{ fontSize: '13px', color: '#2b3a47', fontWeight: '400' }}>
+                  {market.min} / {market.max}
+                </span>
+              </div>
             </div>
-
-            {/* no (Lay / pink) cell */}
-            <div
-              onClick={() => onBetClick && onBetClick({ ...market, side: 'no' })}
-              style={{
-                width: '114.688px',
-                background: '#faa9ba',
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                justifyContent: 'center',
-                cursor: 'pointer',
-                borderLeft: '1px solid #fff',
-                transition: 'opacity 0.15s',
-              }}
-              onMouseEnter={e => e.currentTarget.style.opacity = '0.82'}
-              onMouseLeave={e => e.currentTarget.style.opacity = '1'}
-            >
-              <span style={{ fontWeight: 'bold', fontSize: '14px', lineHeight: 1.1, color: '#000' }}>
-                {market.no}
-              </span>
-              <span style={{ fontSize: '11px', color: '#444', lineHeight: 1.1 }}>
-                {market.noRate}
-              </span>
-            </div>
-
-            {/* Min/Max info */}
-            <div style={{
-              width: '229.376px',
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-              justifyContent: 'center',
-              padding: '0 4px',
-              fontSize: '10px',
-              color: '#777',
-              textAlign: 'center',
-              lineHeight: 1.4,
-            }}>
-              <span style={{ color: '#707c8a' }}>Min/Max</span>
-              <span style={{ fontSize: '13px', color: '#2b3a47', fontWeight: '400' }}>
-                {market.min} / {market.max}
-              </span>
-            </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
     </div>
   );

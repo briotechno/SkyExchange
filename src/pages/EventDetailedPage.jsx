@@ -10,6 +10,7 @@ import BookmakerTable from '../components/EventDetailedPage/MatchTable/Bookmaker
 import FancyTable from '../components/EventDetailedPage/MatchTable/FancyTable';
 import { marketController } from '../controllers';
 import { useAuthStore } from '../store/authStore';
+import { useRatePolling } from '../hooks/useRatePolling';
 
 const EventDetailedPage = () => {
   const { sport, matchId } = useParams();
@@ -22,6 +23,16 @@ const EventDetailedPage = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [scoreboardHtml, setScoreboardHtml] = useState(null);
   const pollingRef = useRef(null);
+
+  // Hook for live rates
+  const { liveRates, scoreboardHtml: liveScoreboardHtml } = useRatePolling(matchId, gameData, 1000);
+
+  // Sync scoreboard HTML from hook to local state
+  useEffect(() => {
+    if (liveScoreboardHtml) {
+      setScoreboardHtml(liveScoreboardHtml);
+    }
+  }, [liveScoreboardHtml]);
 
   const fetchGameData = async () => {
     try {
@@ -82,79 +93,6 @@ const EventDetailedPage = () => {
       fetchGameData();
     }
   }, [matchId, isLoggedIn, loginToken]);
-
-  useEffect(() => {
-    if (!matchId || !gameData) return;
-
-    let isMounted = true;
-    const pollScoreboard = async () => {
-      try {
-        // We find the primary market (usually Match Odds) to poll rates for scoreboard
-        const primaryMarket = (gameData.ODDS && (gameData.ODDS[0] || Object.values(gameData.ODDS)[0])) ||
-          (gameData.marketData && gameData.marketData.matchOdds?.[0]) ||
-          (gameData.events && (gameData.events[0] || Object.values(gameData.events)[0]));
-
-        if (!primaryMarket && !matchId) return;
-
-        // Precise ID logic matching betting-pwa
-        const mid = (primaryMarket?.MarketId?.toString().startsWith('1.') || primaryMarket?.marketid?.toString().startsWith('1.'))
-          ? (primaryMarket?.MarketId || primaryMarket?.marketid)
-          : (primaryMarket?.eid || primaryMarket?.MarketId || primaryMarket?.marketid || matchId);
-
-        if (!mid) return;
-
-        const res = await marketController.getGameRate({
-          gid: matchId,
-          MarketId: mid.toString(),
-          eventid: gameData.Event_Id || gameData.eventid || matchId,
-          gkey: primaryMarket?.gkey || '',
-          ekey: primaryMarket?.ekey || ''
-        });
-
-        if (res && !res.error) {
-          // Recursive search for scoreboard HTML to be 100% sure we find it
-          const findHtml = (obj, depth = 0) => {
-            if (!obj || typeof obj !== 'object' || depth > 3) return null;
-
-            // Priority keys for scoreboard
-            const priorityKeys = ["2", "1", "3", 2, 1, 3];
-            for (const k of priorityKeys) {
-              const val = obj[k];
-              if (val && typeof val === 'string' && (val.includes('<div') || val.includes('<style'))) {
-                return val;
-              }
-            }
-
-            // Depth search
-            for (const key in obj) {
-              if (obj[key] && typeof obj[key] === 'object') {
-                const result = findHtml(obj[key], depth + 1);
-                if (result) return result;
-              }
-            }
-            return null;
-          };
-
-          const foundHtml = findHtml(res);
-          if (foundHtml && isMounted) {
-            setScoreboardHtml(foundHtml);
-          }
-        }
-      } catch (err) {
-        console.error('Scoreboard poll error:', err);
-      }
-
-      if (isMounted) {
-        pollingRef.current = setTimeout(pollScoreboard, 333);
-      }
-    };
-
-    pollScoreboard();
-    return () => {
-      isMounted = false;
-      if (pollingRef.current) clearTimeout(pollingRef.current);
-    };
-  }, [matchId, gameData]);
 
   const handleBetClick = (runner, type, price, market = 'Match Odds') => {
     setSelectedBet({
@@ -220,61 +158,62 @@ const EventDetailedPage = () => {
           </ul>
           {/* Market content area */}
           <div className="p-4 flex-1 overflow-y-auto">
-            {/* Extract Markets */}
+            {/* Dynamic Market Rendering */}
             {(() => {
               const eventList = Object.values(gameData?.events || {});
-              const matchOdds = eventList.find(e => e.Type === 'ODDS');
-              const bookmaker = eventList.find(e => e.Type === 'BOOKMAKER' && e.name?.includes('Book Maker'));
-              const winTheToss = eventList.find(e => e.name === 'TO WIN THE TOSS');
-              const tiedMatch = eventList.find(e => e.name === 'Tied Match');
-              const lineMarket = eventList.find(e => e.Type === 'LINE');
+              
+              // Group Fancy markets to show them together at the bottom or top
               const fancyMarkets = eventList.filter(e => e.Type === 'FANCY');
+              // Other markets to render individually
+              const otherMarkets = eventList.filter(e => e.Type !== 'FANCY');
 
               return (
                 <>
-                  {/* Odds Table */}
-                  {matchOdds && (
-                    <OddsTable
-                      marketData={matchOdds}
-                      onBetClick={(runner, type, price) => handleBetClick(runner, type, price, 'Match Odds')}
-                    />
-                  )}
+                  {otherMarkets.map((market, mIdx) => {
+                    const type = market.Type?.toUpperCase();
+                    const name = market.name?.toUpperCase() || '';
 
-                  {/* Bookmaker Table */}
-                  {bookmaker && (
-                    <BookmakerTable
-                      bookmakerData={bookmaker}
-                      onBetClick={(runner, type, price) => handleBetClick(runner, type, price, 'Bookmaker')}
-                    />
-                  )}
+                    // Main Match Odds
+                    if (type === 'ODDS') {
+                      return (
+                        <OddsTable
+                          key={market.eid || mIdx}
+                          marketData={market}
+                          liveRates={liveRates}
+                          onBetClick={(runner, side, price) => handleBetClick(runner, side, price, market.name)}
+                        />
+                      );
+                    }
 
-                  {winTheToss && (
-                    <OddsTable
-                      marketName="Win The Toss"
-                      marketData={winTheToss}
-                      onBetClick={(runner, type, price) => handleBetClick(runner, type, price, 'Win The Toss')}
-                    />
-                  )}
+                    // All Bookmaker variations
+                    if (type === 'BOOKMAKER') {
+                      return (
+                        <BookmakerTable
+                          key={market.eid || mIdx}
+                          bookmakerData={market}
+                          liveRates={liveRates}
+                          onBetClick={(runner, side, price) => handleBetClick(runner, side, price, market.name)}
+                        />
+                      );
+                    }
 
-                  {lineMarket && (
-                    <OddsTable
-                      marketName="Line Market"
-                      marketData={lineMarket}
-                      onBetClick={(runner, type, price) => handleBetClick(runner, type, price, 'Line Market')}
-                    />
-                  )}
-                  
-                  {tiedMatch && (
-                    <OddsTable
-                      marketName="Tied Match"
-                      marketData={tiedMatch}
-                      onBetClick={(runner, type, price) => handleBetClick(runner, type, price, 'Tied Match')}
-                    />
-                  )}
+                    // ODDS, EXTRA (Tied Match), and others
+                    return (
+                      <OddsTable
+                        key={market.eid || mIdx}
+                        marketName={market.name}
+                        marketData={market}
+                        liveRates={liveRates}
+                        onBetClick={(runner, side, price) => handleBetClick(runner, side, price, market.name)}
+                      />
+                    );
+                  })}
 
+                  {/* Grouped Fancy Markets */}
                   {fancyMarkets.length > 0 && (
                     <FancyTable 
                       fancyData={fancyMarkets}
+                      liveRates={liveRates}
                       onBetClick={(bet) => handleBetClick(bet.name, bet.side, bet.price, 'Fancy Bet')}
                     />
                   )}
