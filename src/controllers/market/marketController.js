@@ -16,4 +16,5 @@ export const marketController = {
   getHomeBanners: (type = 'Web') => fetchAPI('/homebanners', { Type: type }),
   getNews: (token = '7034X2N0GES6JSmqnVZneMgKWhvrYOGPUwoGnHsGNVCM ') => fetchAPI('/news', { LoginToken: token }),
   toggleFavourite: (loginToken, eid) => fetchAPI('/favourite', { LoginToken: loginToken, Eid: eid }),
+  getOpenTv: (loginToken, eventId) => fetchAPI('/opentv', { LoginToken: loginToken, Event_Id: eventId }),
 };

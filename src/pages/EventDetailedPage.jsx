@@ -22,6 +22,9 @@ const EventDetailedPage = () => {
   const [gameData, setGameData] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [scoreboardHtml, setScoreboardHtml] = useState(null);
+  const [tvVisible, setTvVisible] = useState(false);
+  const [tvHtml, setTvHtml] = useState(null);
+  const [tvLoading, setTvLoading] = useState(false);
   const pollingRef = useRef(null);
 
   // Hook for live rates
@@ -88,6 +91,34 @@ const EventDetailedPage = () => {
     }
   };
 
+  const toggleTv = async () => {
+    if (!tvVisible && !tvHtml) {
+      const eventId = gameData?.Event_Id || gameData?.eventid || matchId;
+      if (!isLoggedIn || !loginToken) {
+        alert('Please login to watch TV');
+        return;
+      }
+      setTvLoading(true);
+      try {
+        console.log('Fetching TV for event:', eventId);
+        const res = await marketController.getOpenTv(loginToken, eventId.toString());
+        if (res.error === '0' && res.data) {
+          setTvHtml(res.data);
+          setTvVisible(true);
+        } else {
+          alert(res.msg || 'TV not available for this event');
+        }
+      } catch (err) {
+        console.error('TV Error:', err);
+        alert('Failed to load TV');
+      } finally {
+        setTvLoading(false);
+      }
+    } else {
+      setTvVisible(!tvVisible);
+    }
+  };
+
   useEffect(() => {
     if (matchId) {
       fetchGameData();
@@ -139,6 +170,10 @@ const EventDetailedPage = () => {
             html={scoreboardHtml}
             onPin={handleToggleFavourite}
             onRefresh={fetchGameData}
+            tvVisible={tvVisible}
+            tvHtml={tvHtml}
+            tvLoading={tvLoading}
+            toggleTv={toggleTv}
           />
           <ul className="match-btn flex justify-center">
             <li>
