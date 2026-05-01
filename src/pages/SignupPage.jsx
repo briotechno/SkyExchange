@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { authController } from '../controllers';
 import { useAuthStore } from '../store/authStore';
+import { useSnackbarStore } from '../store/snackbarStore';
 import '../styles/style-login.css';
 
 function SignupPage() {
@@ -17,6 +18,7 @@ function SignupPage() {
   
   const navigate = useNavigate();
   const loginAction = useAuthStore((state) => state.login);
+  const showSnackbar = useSnackbarStore(state => state.show);
 
   const checkUsernameAvailability = async () => {
     if (!username.trim()) return;
@@ -28,20 +30,20 @@ function SignupPage() {
     }
   };
 
-  const handleSendOtp = async () => {
-    if (!mobile.trim()) { alert('Please enter mobile number'); return; }
+   const handleSendOtp = async () => {
+    if (!mobile.trim()) { showSnackbar('Please enter mobile number', 'error'); return; }
     try {
       setLoading(true);
       const resp = await authController.sendOtp(mobile);
       if (resp.error === '0') {
-        alert(resp.msg || 'OTP Sent Successfully');
+        showSnackbar(resp.msg || 'OTP Sent Successfully', 'success');
         setOtpStatus('OTP Sent');
       } else {
-        alert(resp.msg || 'Failed to send OTP');
+        showSnackbar(resp.msg || 'Failed to send OTP', 'error');
       }
     } catch (err) {
       console.error(err);
-      alert('Error sending OTP');
+      showSnackbar('Error sending OTP', 'error');
     } finally {
       setLoading(false);
     }
@@ -61,7 +63,7 @@ function SignupPage() {
       const response = await authController.createUser(data);
 
       if (response.error === '0') {
-        alert(response.msg || 'Signup Successful!');
+        showSnackbar(response.msg || 'Signup Successful!', 'success');
         // Ideally the createuser response contains a token, if so we login directly
         if (response.apitoken || response.LoginToken) {
             loginAction(response.username || username, response.apitoken || response.LoginToken);
@@ -70,11 +72,11 @@ function SignupPage() {
             navigate('/login');
         }
       } else {
-        alert(response.msg || 'Signup failed');
+        showSnackbar(response.msg || 'Signup failed', 'error');
       }
     } catch (err) {
       console.error('Signup Error:', err);
-      alert('An unexpected error occurred during signup.');
+      showSnackbar('An unexpected error occurred during signup.', 'error');
     } finally {
       setLoading(false);
     }

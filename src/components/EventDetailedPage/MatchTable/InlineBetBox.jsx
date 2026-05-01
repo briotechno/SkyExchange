@@ -2,13 +2,15 @@ import React, { useState, useEffect } from 'react';
 import { useAuthStore } from '../../../store/authStore';
 import { bettingController } from '../../../controllers';
 import { userController } from '../../../controllers/user/userController';
+import { useSnackbarStore } from '../../../store/snackbarStore';
 
 const InlineBetBox = ({ selection, matchId, onCancel, onSuccess }) => {
   const { loginToken } = useAuthStore();
+  const showSnackbar = useSnackbarStore(state => state.show);
   const [stake, setStake] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [acceptAnyOdds, setAcceptAnyOdds] = useState(true);
-  const [stakes, setStakes] = useState([4, 30, 50, 200, 500, 1000]); // Default fallback stakes
+  const [stakes, setStakes] = useState([100, 200, 500, 1000, 5000, 10000]); // Default fallback stakes
 
   useEffect(() => {
     if (loginToken) {
@@ -45,11 +47,11 @@ const InlineBetBox = ({ selection, matchId, onCancel, onSuccess }) => {
 
   const handlePlaceBet = async () => {
     if (!stake || parseFloat(stake) <= 0) {
-      alert('Please enter a valid stake amount');
+      showSnackbar('Please enter a valid stake amount', 'error');
       return;
     }
     if (!loginToken) {
-      alert('Please login to place a bet');
+      showSnackbar('Please login to place a bet', 'error');
       return;
     }
 
@@ -57,7 +59,7 @@ const InlineBetBox = ({ selection, matchId, onCancel, onSuccess }) => {
     try {
       const market = selection.marketData;
       const mType = market?.Type?.toUpperCase() || 'ODDS';
-      
+
       const common = {
         LoginToken: loginToken,
         Eid: market?.eid || matchId || market?.MarketId || market?.marketid,
@@ -139,15 +141,15 @@ const InlineBetBox = ({ selection, matchId, onCancel, onSuccess }) => {
       }
 
       if (res && (res.status === 'Success' || res.status === 200 || res.success || res.error === '0')) {
-        alert(`Bet placed successfully @ ${selection.price} of ${stake}!`);
+        showSnackbar(`Bet placed successfully @ ${selection.price} of ${stake}!`, 'success');
         if (onSuccess) onSuccess();
         onCancel();
       } else {
-        alert(res?.msg || res?.message || res?.description || "Failed to place bet");
+        showSnackbar(res?.msg || res?.message || res?.description || "Failed to place bet", 'error');
       }
     } catch (err) {
       console.error(err);
-      alert("An error occurred while placing bet");
+      showSnackbar("An error occurred while placing bet", 'error');
     } finally {
       setIsLoading(false);
     }
@@ -158,10 +160,10 @@ const InlineBetBox = ({ selection, matchId, onCancel, onSuccess }) => {
       {/* Top Row */}
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '8px 10px' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-          <input 
-            type="checkbox" 
-            checked={acceptAnyOdds} 
-            onChange={(e) => setAcceptAnyOdds(e.target.checked)} 
+          <input
+            type="checkbox"
+            checked={acceptAnyOdds}
+            onChange={(e) => setAcceptAnyOdds(e.target.checked)}
             id="accept-odds"
             style={{ cursor: 'pointer', margin: 0, width: '14px', height: '14px' }}
           />
@@ -171,64 +173,64 @@ const InlineBetBox = ({ selection, matchId, onCancel, onSuccess }) => {
         </div>
 
         <div style={{ display: 'flex', alignItems: 'stretch', gap: '6px', height: '32px' }}>
-          <button 
+          <button
             onClick={onCancel}
-            style={{ 
-              backgroundColor: '#f8f8f8', 
-              border: '1px solid #c9c9c9', 
-              borderRadius: '3px', 
-              padding: '0 16px', 
-              fontWeight: 'bold', 
-              color: '#333', 
+            style={{
+              backgroundColor: '#f8f8f8',
+              border: '1px solid #c9c9c9',
+              borderRadius: '3px',
+              padding: '0 16px',
+              fontWeight: 'bold',
+              color: '#333',
               fontSize: '13px',
               cursor: 'pointer',
               boxShadow: '0 1px 2px rgba(0,0,0,0.05)'
             }}>
             Cancel
           </button>
-          
-          <div style={{ 
-            backgroundColor: '#fff', 
-            border: '1px solid #ccc', 
-            borderRadius: '3px', 
-            minWidth: '55px', 
-            display: 'flex', 
-            flexDirection: 'column', 
-            alignItems: 'center', 
+
+          <div style={{
+            backgroundColor: '#fff',
+            border: '1px solid #ccc',
+            borderRadius: '3px',
+            minWidth: '55px',
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
             justifyContent: 'center',
             padding: '2px 6px'
           }}>
             <span style={{ fontWeight: 'bold', fontSize: '14px', lineHeight: '1', color: '#1e1e1e' }}>{selection.price}</span>
             <span style={{ fontSize: '10px', color: '#888', lineHeight: '1', marginTop: '1px' }}>100</span>
           </div>
-          
-          <input 
-            type="number" 
-            value={stake} 
+
+          <input
+            type="number"
+            value={stake}
             onChange={(e) => setStake(e.target.value)}
-            style={{ 
-              width: '100px', 
-              border: '1px solid #ccc', 
-              borderRadius: '3px', 
-              padding: '0 8px', 
+            style={{
+              width: '100px',
+              border: '1px solid #ccc',
+              borderRadius: '3px',
+              padding: '0 8px',
               fontWeight: 'bold',
               fontSize: '14px',
               outline: 'none'
             }}
           />
-          
-          <button 
+
+          <button
             onClick={handlePlaceBet}
             disabled={isLoading || !stake}
-            style={{ 
-              background: (!stake || isLoading) 
-                ? '#9e9e9e' 
-                : 'linear-gradient(180deg, #9f9b99 0%, #877f7d 100%)', 
-              border: '1px solid #7a716e', 
-              borderRadius: '3px', 
-              padding: '0 24px', 
-              fontWeight: 'bold', 
-              color: (!stake || isLoading) ? '#e0e0e0' : '#fac973', 
+            style={{
+              background: (!stake || isLoading)
+                ? '#9e9e9e'
+                : 'linear-gradient(180deg, #9f9b99 0%, #877f7d 100%)',
+              border: '1px solid #7a716e',
+              borderRadius: '3px',
+              padding: '0 24px',
+              fontWeight: 'bold',
+              color: (!stake || isLoading) ? '#e0e0e0' : '#fac973',
               fontSize: '14px',
               cursor: (!stake || isLoading) ? 'not-allowed' : 'pointer',
               boxShadow: '0 1px 2px rgba(0,0,0,0.1)'
@@ -241,17 +243,17 @@ const InlineBetBox = ({ selection, matchId, onCancel, onSuccess }) => {
       {/* Bottom Row */}
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: '6px', padding: '0 10px 10px 10px' }}>
         {stakes.map((val) => (
-          <button 
+          <button
             key={val}
             onClick={() => handleStakeClick(val)}
-            style={{ 
-              backgroundColor: '#fdfdfd', 
-              border: '1px solid #c9c9c9', 
-              borderRadius: '3px', 
-              padding: '5px 0', 
-              width: '75px', 
-              fontWeight: 'bold', 
-              color: '#333', 
+            style={{
+              backgroundColor: '#fdfdfd',
+              border: '1px solid #c9c9c9',
+              borderRadius: '3px',
+              padding: '5px 0',
+              width: '75px',
+              fontWeight: 'bold',
+              color: '#333',
               fontSize: '13px',
               cursor: 'pointer',
               boxShadow: '0 1px 1px rgba(0,0,0,0.05)',

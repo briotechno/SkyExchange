@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { authController } from '../controllers';
 import { useAuthStore } from '../store/authStore';
+import { useSnackbarStore } from '../store/snackbarStore';
 import '../styles/style-login.css';
 
 function LoginPage() {
@@ -12,6 +13,7 @@ function LoginPage() {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const loginAction = useAuthStore((state) => state.login);
+  const showSnackbar = useSnackbarStore(state => state.show);
 
   const generateCode = () => String(Math.floor(1000 + Math.random() * 9000));
 
@@ -21,10 +23,10 @@ function LoginPage() {
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    if (!loginName.trim()) { alert('Username is empty'); return; }
-    if (!password.trim()) { alert('Password is empty'); return; }
+    if (!loginName.trim()) { showSnackbar('Username is empty', 'error'); return; }
+    if (!password.trim()) { showSnackbar('Password is empty', 'error'); return; }
     if (validationInput.trim() !== validationCode) {
-      alert('Invalid Validation Code!');
+      showSnackbar('Invalid Validation Code!', 'error');
       setValidationCode(generateCode());
       setValidationInput('');
       return;
@@ -43,17 +45,17 @@ function LoginPage() {
       if (response.error === '0') {
         // Success
         loginAction(response.username || loginName, response.LoginToken);
-        alert('Login Successful');
+        showSnackbar('Login Successful', 'success');
         navigate('/');
       } else {
         // Error from API
-        alert(response.msg || 'Login failed. Please check your credentials.');
+        showSnackbar(response.msg || 'Login failed. Please check your credentials.', 'error');
         setValidationCode(generateCode());
         setValidationInput('');
       }
     } catch (error) {
       console.error('Login Error:', error);
-      alert('An expected error occurred during login.');
+      showSnackbar('An expected error occurred during login.', 'error');
     } finally {
       setLoading(false);
     }

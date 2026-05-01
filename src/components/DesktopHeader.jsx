@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { authController, userController, marketController } from '../controllers';
 import { useAuthStore } from '../store/authStore';
+import { useSnackbarStore } from '../store/snackbarStore';
 
 function DesktopHeader({ onVirtualCricketClick }) {
   const [validationCode, setValidationCode] = useState('');
@@ -21,6 +22,7 @@ function DesktopHeader({ onVirtualCricketClick }) {
   const navigate = useNavigate();
   const { isLoggedIn, username, loginToken, logout } = useAuthStore();
   const loginAction = useAuthStore((state) => state.login);
+  const showSnackbar = useSnackbarStore(state => state.show);
 
   const generateCode = () => {
     return String(Math.floor(1000 + Math.random() * 9000));
@@ -101,10 +103,10 @@ function DesktopHeader({ onVirtualCricketClick }) {
 
   const validateLogin = async (e) => {
     e.preventDefault();
-    if (!loginName.trim()) { alert('Username is empty'); return; }
-    if (!password.trim()) { alert('Password is empty'); return; }
+    if (!loginName.trim()) { showSnackbar('Username is empty', 'error'); return; }
+    if (!password.trim()) { showSnackbar('Password is empty', 'error'); return; }
     if (validationInput.trim() !== validationCode) {
-      alert('Invalid Validation Code!');
+      showSnackbar('Invalid Validation Code!', 'error');
       setValidationCode(generateCode());
       setValidationInput('');
       return;
@@ -121,19 +123,19 @@ function DesktopHeader({ onVirtualCricketClick }) {
       if (response.error === '0') {
         const token = response.LoginToken || response.apitoken || response.token;
         loginAction(response.username || loginName, token);
-        alert('Login Successful');
+        showSnackbar('Login Successful', 'success');
         setLoginName('');
         setPassword('');
         setValidationInput('');
         setValidationCode(generateCode());
       } else {
-        alert(response.msg || 'Login failed.');
+        showSnackbar(response.msg || 'Login failed.', 'error');
         setValidationCode(generateCode());
         setValidationInput('');
       }
     } catch (error) {
       console.error('Desktop Login Error:', error);
-      alert('Network or unexpected error during login.');
+      showSnackbar('Network or unexpected error during login.', 'error');
     } finally {
       setLoading(false);
     }

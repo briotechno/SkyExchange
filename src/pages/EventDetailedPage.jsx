@@ -11,11 +11,13 @@ import FancyTable from '../components/EventDetailedPage/MatchTable/FancyTable';
 import { marketController } from '../controllers';
 import { useAuthStore } from '../store/authStore';
 import { useRatePolling } from '../hooks/useRatePolling';
+import { useSnackbarStore } from '../store/snackbarStore';
 
 const EventDetailedPage = () => {
   const { sport, matchId } = useParams();
   const navigate = useNavigate();
   const { loginToken, isLoggedIn } = useAuthStore();
+  const showSnackbar = useSnackbarStore(state => state.show);
 
   const [selectedBet, setSelectedBet] = useState(null);
   const [activeInns, setActiveInns] = useState(1);
@@ -66,7 +68,7 @@ const EventDetailedPage = () => {
 
   const handleToggleFavourite = async () => {
     if (!isLoggedIn || !loginToken) {
-      alert('Please login to add to favourites');
+      showSnackbar('Please login to add to favourites', 'error');
       return;
     }
 
@@ -82,9 +84,9 @@ const EventDetailedPage = () => {
       console.log('Toggling favourite for EID:', eidToUse);
       const res = await marketController.toggleFavourite(loginToken, eidToUse.toString());
       if (res && res.error === '0') {
-        alert(res.msg || 'Favourite updated');
+        showSnackbar(res.msg || 'Favourite updated', 'success');
       } else {
-        alert(res?.msg || 'Failed to update favourite');
+        showSnackbar(res?.msg || 'Failed to update favourite', 'error');
       }
     } catch (err) {
       console.error('Favourite error:', err);
@@ -95,7 +97,7 @@ const EventDetailedPage = () => {
     if (!tvVisible && !tvHtml) {
       const eventId = gameData?.Event_Id || gameData?.eventid || matchId;
       if (!isLoggedIn || !loginToken) {
-        alert('Please login to watch TV');
+        showSnackbar('Please login to watch TV', 'error');
         return;
       }
       setTvLoading(true);
@@ -106,11 +108,11 @@ const EventDetailedPage = () => {
           setTvHtml(res.data);
           setTvVisible(true);
         } else {
-          alert(res.msg || 'TV not available for this event');
+          showSnackbar(res.msg || 'TV not available for this event', 'info');
         }
       } catch (err) {
         console.error('TV Error:', err);
-        alert('Failed to load TV');
+        showSnackbar('Failed to load TV', 'error');
       } finally {
         setTvLoading(false);
       }

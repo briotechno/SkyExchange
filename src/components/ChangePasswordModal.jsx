@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { authController } from '../controllers';
 import { useAuthStore } from '../store/authStore';
+import { useSnackbarStore } from '../store/snackbarStore';
 import './ChangePasswordModal.css';
 
 function ChangePasswordModal({ isOpen, onClose }) {
@@ -9,17 +10,18 @@ function ChangePasswordModal({ isOpen, onClose }) {
   const [oldPassword, setOldPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const loginToken = useAuthStore((state) => state.loginToken);
+  const showSnackbar = useSnackbarStore(state => state.show);
 
   if (!isOpen) return null;
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!newPassword || !confirmPassword || !oldPassword) {
-      alert('All fields are required.');
+      showSnackbar('All fields are required.', 'error');
       return;
     }
     if (newPassword !== confirmPassword) {
-      alert('New passwords do not match.');
+      showSnackbar('New passwords do not match.', 'error');
       return;
     }
 
@@ -32,17 +34,17 @@ function ChangePasswordModal({ isOpen, onClose }) {
       });
 
       if (response && response.error === '0') {
-        alert('Password changed successfully.');
+        showSnackbar('Password changed successfully.', 'success');
         onClose();
         setNewPassword('');
         setConfirmPassword('');
         setOldPassword('');
       } else {
-        alert(response?.msg || 'Failed to change password.');
+        showSnackbar(response?.msg || 'Failed to change password.', 'error');
       }
     } catch (err) {
       console.error(err);
-      alert('An error occurred while changing password.');
+      showSnackbar('An error occurred while changing password.', 'error');
     } finally {
       setLoading(false);
     }

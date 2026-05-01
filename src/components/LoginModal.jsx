@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { authController } from '../controllers';
 import { useAuthStore } from '../store/authStore';
+import { useSnackbarStore } from '../store/snackbarStore';
 
 function LoginModal({ isOpen, onClose }) {
   const [validationCode, setValidationCode] = useState('');
@@ -9,6 +10,7 @@ function LoginModal({ isOpen, onClose }) {
   const [validationInput, setValidationInput] = useState('');
   const [loading, setLoading] = useState(false);
   const loginAction = useAuthStore((state) => state.login);
+  const showSnackbar = useSnackbarStore(state => state.show);
 
   const generateCode = () => String(Math.floor(1000 + Math.random() * 9000));
 
@@ -20,10 +22,10 @@ function LoginModal({ isOpen, onClose }) {
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    if (!loginName.trim()) { alert('Username is empty'); return; }
-    if (!password.trim()) { alert('Password is empty'); return; }
+    if (!loginName.trim()) { showSnackbar('Username is empty', 'error'); return; }
+    if (!password.trim()) { showSnackbar('Password is empty', 'error'); return; }
     if (validationInput.trim() !== validationCode) {
-      alert('Invalid Validation Code!');
+      showSnackbar('Invalid Validation Code!', 'error');
       setValidationCode(generateCode());
       setValidationInput('');
       return;
@@ -39,16 +41,16 @@ function LoginModal({ isOpen, onClose }) {
 
       if (response.error === '0') {
         loginAction(response.username || loginName, response.LoginToken);
-        alert('Login Successful');
+        showSnackbar('Login Successful', 'success');
         onClose();
       } else {
-        alert(response.msg || 'Login failed.');
+        showSnackbar(response.msg || 'Login failed.', 'error');
         setValidationCode(generateCode());
         setValidationInput('');
       }
     } catch (error) {
       console.error('Modal Login Error:', error);
-      alert('Error during login.');
+      showSnackbar('Error during login.', 'error');
     } finally {
       setLoading(false);
     }
