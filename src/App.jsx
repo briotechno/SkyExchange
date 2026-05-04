@@ -25,6 +25,7 @@ import EventDetailedPage from './pages/EventDetailedPage';
 import DepositPage from './pages/DepositPage';
 import WithdrawPage from './pages/WithdrawPage';
 import NotFoundPage from './pages/NotFoundPage';
+import CasinoPage from './pages/CasinoPage';
 
 import './App.css';
 
@@ -60,6 +61,7 @@ function App() {
         <Route path="/activity-log" element={<ActivityLogPage />} />
         <Route path="/wallet/deposit" element={<DepositPage />} />
         <Route path="/wallet/withdrawal" element={<WithdrawPage />} />
+        <Route path="/casino" element={<CasinoPage />} />
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
       <Snackbar />

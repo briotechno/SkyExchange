@@ -508,6 +508,11 @@ function DesktopHeader({ onVirtualCricketClick }) {
               <li><Link to="/horse-racing" className={isActive('/horse-racing') ? 'active-menu' : ''}><span className="tag-live"><strong></strong>{matchCounts['Horse Racing']}</span>Horse Racing</Link></li>
               <li><Link to="/greyhound-racing" className={isActive('/greyhound-racing') ? 'active-menu' : ''}><span className="tag-live"><strong></strong>{matchCounts['Greyhound Racing']}</span>Greyhound Racing</Link></li>
               <li><a href="#" onClick={(e) => { e.preventDefault(); onVirtualCricketClick && onVirtualCricketClick(); }}>Virtual Cricket</a></li>
+              <li>
+                <Link id="menu_Casino" to="/casino" className={`casino tag-new ${isActive('/casino') ? 'active-menu' : ''}`}>
+                  Casino
+                </Link>
+              </li>
             </ul>
             <ul className="setting-wrap" style={{ display: 'flex', alignItems: 'center', listStyle: 'none', margin: 0, padding: 0 }}>
               <li className="time_zone" style={{ display: 'flex', alignItems: 'center', whiteSpace: 'nowrap' }}><span>Time Zone :</span> GMT+5:30</li>

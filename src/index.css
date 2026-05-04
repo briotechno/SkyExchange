@@ -799,6 +799,42 @@ body {
   background: #f6f6f6;
 }
 
+/* ======= CASINO & NEW TAG STYLES ======= */
+.menu li {
+    overflow: visible !important;
+}
+
+.menu .tag-new, .setting-wrap .tag-new {
+    position: relative;
+}
+
+.menu .tag-new:before, .setting-wrap .tag-new:before {
+    content: "";
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    width: 29px;
+    height: 29px;
+    background: url(/images/menu-tagnew.png) no-repeat;
+    background-size: contain;
+    z-index: 10;
+}
+
+.menu .casino:after, .setting-wrap .casino:after, .menu .bet-game:after, .setting-wrap .bet-game:after {
+    content: "";
+    display: inline-block;
+    position: relative;
+    top: 4px;
+    left: 2px;
+    width: 18px;
+    height: 18px;
+    background: url(/images/menu-casino.png) no-repeat;
+}
+
+.menu li a.tag-new {
+  padding-left: 22px !important;
+}
+
 /* ===== MULTI MARKETS PAGE ===== */
 .multi-markets-board {
   background: #f0f0f0;
