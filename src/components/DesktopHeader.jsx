@@ -4,7 +4,10 @@ import { authController, userController, marketController } from '../controllers
 import { useAuthStore } from '../store/authStore';
 import { useSnackbarStore } from '../store/snackbarStore';
 
-function DesktopHeader({ onVirtualCricketClick }) {
+import { useUIStore } from '../store/uiStore';
+
+function DesktopHeader() {
+  const openLoginModal = useUIStore(state => state.openLoginModal);
   const [validationCode, setValidationCode] = useState('');
   const [loginName, setLoginName] = useState('');
   const [password, setPassword] = useState('');
@@ -153,7 +156,7 @@ function DesktopHeader({ onVirtualCricketClick }) {
       // Fetching live counts for all major sports
       const sports = ['Cricket', 'Football', 'Tennis', 'Horse Racing', 'Greyhound Racing'];
       const res = await marketController.getGameList(sports.join(','));
-      
+
       let matchData = [];
       if (res && res.matches) {
         matchData = res.matches;
@@ -176,9 +179,9 @@ function DesktopHeader({ onVirtualCricketClick }) {
         const sport = m.sportname || m.Type || m.sport || 'Other';
         const startTimeStr = m.DateTime || m.dateTime || m.Datetime || m.staredtime || m.StartTime || '';
         const startTime = parseDate(startTimeStr);
-        const isWinnerMarket = (m.Game_Type || m.GameType || '').toLowerCase() === 'winner' || 
-                             (m.Team2 || '').includes('TOURNAMENT_WINNER');
-        
+        const isWinnerMarket = (m.Game_Type || m.GameType || '').toLowerCase() === 'winner' ||
+          (m.Team2 || '').includes('TOURNAMENT_WINNER');
+
         // Count as "Live" if it has started or is a winner market
         if ((startTime && startTime <= now) || isWinnerMarket) {
           if (sport === 'Cricket') counts.Cricket++;
@@ -265,18 +268,18 @@ function DesktopHeader({ onVirtualCricketClick }) {
                 ></button>
               </div>
               {showSearchResults && searchInput.length > 0 && (
-                <div 
-                  className="suggestion-dropdown" 
-                  style={{ 
-                    position: 'absolute', 
-                    top: '100%', 
-                    left: 0, 
-                    width: '350px', 
-                    background: '#fff', 
-                    border: '1px solid #ccc', 
-                    borderRadius: '4px', 
-                    boxShadow: '0 4px 15px rgba(0,0,0,0.2)', 
-                    zIndex: 1100, 
+                <div
+                  className="suggestion-dropdown"
+                  style={{
+                    position: 'absolute',
+                    top: '100%',
+                    left: 0,
+                    width: '350px',
+                    background: '#fff',
+                    border: '1px solid #ccc',
+                    borderRadius: '4px',
+                    boxShadow: '0 4px 15px rgba(0,0,0,0.2)',
+                    zIndex: 1100,
                     marginTop: '5px',
                     maxHeight: '400px',
                     overflowY: 'auto'
@@ -302,14 +305,14 @@ function DesktopHeader({ onVirtualCricketClick }) {
                         <li key={res.Gid || index} style={{ borderBottom: '1px solid #f0f0f0' }}>
                           <Link
                             to={`/sports?type=${res.Type.toLowerCase()}&gid=${res.Gid}`}
-                            style={{ 
-                              display: 'flex', 
-                              alignItems: 'center', 
-                              gap: '12px', 
-                              padding: '10px 15px', 
-                              textDecoration: 'none', 
-                              color: '#333', 
-                              transition: 'background 0.2s' 
+                            style={{
+                              display: 'flex',
+                              alignItems: 'center',
+                              gap: '12px',
+                              padding: '10px 15px',
+                              textDecoration: 'none',
+                              color: '#333',
+                              transition: 'background 0.2s'
                             }}
                             onMouseEnter={(e) => e.currentTarget.style.background = '#f5f5f5'}
                             onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}
@@ -374,20 +377,20 @@ function DesktopHeader({ onVirtualCricketClick }) {
           ) : (
             <div className="account-section" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
               <div className="action-buttons" style={{ display: 'flex', gap: '6px' }}>
-                <Link 
+                <Link
                   to="/wallet/deposit"
-                  style={{ 
-                    background: '#1e8000', 
-                    color: '#fff', 
-                    border: '1px solid #fff', 
-                    borderRadius: '4px', 
-                    padding: '0 10px', 
-                    height: '32px', 
-                    fontSize: '13px', 
-                    fontWeight: 'bold', 
-                    display: 'flex', 
-                    alignItems: 'center', 
-                    gap: '6px', 
+                  style={{
+                    background: '#1e8000',
+                    color: '#fff',
+                    border: '1px solid #fff',
+                    borderRadius: '4px',
+                    padding: '0 10px',
+                    height: '32px',
+                    fontSize: '13px',
+                    fontWeight: 'bold',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '6px',
                     cursor: 'pointer',
                     textTransform: 'uppercase',
                     textDecoration: 'none'
@@ -399,20 +402,20 @@ function DesktopHeader({ onVirtualCricketClick }) {
                   </svg>
                   DEPOSIT
                 </Link>
-                <Link 
+                <Link
                   to="/wallet/withdrawal"
-                  style={{ 
-                    background: '#b80000', 
-                    color: '#fff', 
-                    border: '1px solid #fff', 
-                    borderRadius: '4px', 
-                    padding: '0 10px', 
-                    height: '32px', 
-                    fontSize: '13px', 
-                    fontWeight: 'bold', 
-                    display: 'flex', 
-                    alignItems: 'center', 
-                    gap: '6px', 
+                  style={{
+                    background: '#b80000',
+                    color: '#fff',
+                    border: '1px solid #fff',
+                    borderRadius: '4px',
+                    padding: '0 10px',
+                    height: '32px',
+                    fontSize: '13px',
+                    fontWeight: 'bold',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '6px',
                     cursor: 'pointer',
                     textTransform: 'uppercase',
                     textDecoration: 'none'
@@ -501,18 +504,31 @@ function DesktopHeader({ onVirtualCricketClick }) {
             <ul id="tabMenu" className="menu nav nav-pills">
               <li><Link to="/" className={isActive('/') ? 'active-menu' : ''}>Home</Link></li>
               <li><Link to="/in-play">In-Play</Link></li>
-              <li><Link to="/multi-markets">Multi Markets</Link></li>
+              <li>
+                <Link 
+                  to={isLoggedIn ? "/multi-markets" : "#"} 
+                  className="red-gradient-btn"
+                  onClick={(e) => {
+                    if (!isLoggedIn) {
+                      e.preventDefault();
+                      openLoginModal();
+                    }
+                  }}
+                >
+                  Multi Markets
+                </Link>
+              </li>
               <li><Link to="/cricket" className={isActive('/cricket') ? 'active-menu' : ''}><span className="tag-live"><strong></strong>{matchCounts.Cricket}</span>Cricket</Link></li>
               <li><Link to="/football" className={isActive('/football') ? 'active-menu' : ''}><span className="tag-live"><strong></strong>{matchCounts.Football}</span>Football</Link></li>
               <li><Link to="/tennis" className={isActive('/tennis') ? 'active-menu' : ''}><span className="tag-live"><strong></strong>{matchCounts.Tennis}</span>Tennis</Link></li>
               <li><Link to="/horse-racing" className={isActive('/horse-racing') ? 'active-menu' : ''}><span className="tag-live"><strong></strong>{matchCounts['Horse Racing']}</span>Horse Racing</Link></li>
               <li><Link to="/greyhound-racing" className={isActive('/greyhound-racing') ? 'active-menu' : ''}><span className="tag-live"><strong></strong>{matchCounts['Greyhound Racing']}</span>Greyhound Racing</Link></li>
-              <li><a href="#" onClick={(e) => { e.preventDefault(); onVirtualCricketClick && onVirtualCricketClick(); }}>Virtual Cricket</a></li>
               <li>
                 <Link id="menu_Casino" to="/casino" className={`casino tag-new ${isActive('/casino') ? 'active-menu' : ''}`}>
                   Casino
                 </Link>
               </li>
+              <li><a href="#" className="red-gradient-btn" onClick={(e) => { e.preventDefault(); openLoginModal(); }}>Premium sportBook</a></li>
             </ul>
             <ul className="setting-wrap" style={{ display: 'flex', alignItems: 'center', listStyle: 'none', margin: 0, padding: 0 }}>
               <li className="time_zone" style={{ display: 'flex', alignItems: 'center', whiteSpace: 'nowrap' }}><span>Time Zone :</span> GMT+5:30</li>
@@ -525,6 +541,18 @@ function DesktopHeader({ onVirtualCricketClick }) {
           </div>
         </div>
       </div>
+      <style>{`
+        .red-gradient-btn {
+          background: linear-gradient(-180deg, rgb(247, 36, 36), rgb(187, 28, 0)) !important;
+          color: #fff !important;
+          padding: 0 10px !important;
+          
+        }
+        .red-gradient-btn:hover {
+          opacity: 0.9;
+          color: #fff !important;
+        }
+      `}</style>
     </>
   );
 }

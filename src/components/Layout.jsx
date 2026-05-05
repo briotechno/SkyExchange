@@ -1,19 +1,17 @@
-import React, { useState } from 'react';
+import React from 'react';
 import DesktopHeader from './DesktopHeader';
 import MobileHeader from './MobileHeader';
 import LoginModal from './LoginModal';
+import { useUIStore } from '../store/uiStore';
 
 function Layout({ children }) {
-  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
-
-  const openLoginModal = () => setIsLoginModalOpen(true);
-  const closeLoginModal = () => setIsLoginModalOpen(false);
+  const { isLoginModalOpen, closeLoginModal } = useUIStore();
 
   return (
     <>
       {/* Desktop elements - hidden on mobile via CSS */}
       <div className="desktop-only">
-        <DesktopHeader onVirtualCricketClick={openLoginModal} />
+        <DesktopHeader />
       </div>
 
       {/* Mobile header - hidden on desktop via CSS */}
@@ -22,7 +20,7 @@ function Layout({ children }) {
       </div>
 
 
-      {/* Login Modal (triggered by Virtual Cricket etc.) */}
+      {/* Login Modal (triggered by Premium sportBook etc.) */}
       <LoginModal isOpen={isLoginModalOpen} onClose={closeLoginModal} />
 
       {/* Page content */}

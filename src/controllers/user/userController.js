@@ -10,4 +10,5 @@ export const userController = {
   getNews: (loginToken) => fetchAPI('/news', { LoginToken: loginToken }),
   getPopupImage: (loginToken) => fetchAPI('/popupimg', { LoginToken: loginToken }),
   toggleFavourite: (loginToken, eid) => fetchAPI('/favourite', { LoginToken: loginToken, Eid: eid }),
+  getWhatsAppLink: () => fetchAPI('/wplink', { LoginToken: '' }),
 };

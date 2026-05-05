@@ -10,6 +10,7 @@ import BookmakerTable from '../components/EventDetailedPage/MatchTable/Bookmaker
 import FancyTable from '../components/EventDetailedPage/MatchTable/FancyTable';
 import { marketController } from '../controllers';
 import { useAuthStore } from '../store/authStore';
+import { useUIStore } from '../store/uiStore';
 import { useRatePolling } from '../hooks/useRatePolling';
 import { useSnackbarStore } from '../store/snackbarStore';
 
@@ -17,6 +18,7 @@ const EventDetailedPage = () => {
   const { sport, matchId } = useParams();
   const navigate = useNavigate();
   const { loginToken, isLoggedIn } = useAuthStore();
+  const openLoginModal = useUIStore(state => state.openLoginModal);
   const showSnackbar = useSnackbarStore(state => state.show);
 
   const [selectedBet, setSelectedBet] = useState(null);
@@ -68,7 +70,7 @@ const EventDetailedPage = () => {
 
   const handleToggleFavourite = async () => {
     if (!isLoggedIn || !loginToken) {
-      showSnackbar('Please login to add to favourites', 'error');
+      openLoginModal();
       return;
     }
 
@@ -97,7 +99,7 @@ const EventDetailedPage = () => {
     if (!tvVisible && !tvHtml) {
       const eventId = gameData?.Event_Id || gameData?.eventid || matchId;
       if (!isLoggedIn || !loginToken) {
-        showSnackbar('Please login to watch TV', 'error');
+        openLoginModal();
         return;
       }
       setTvLoading(true);
@@ -128,6 +130,11 @@ const EventDetailedPage = () => {
   }, [matchId, isLoggedIn, loginToken]);
 
   const handleBetClick = (runner, type, price, market = 'Match Odds', runnerIndex, marketData, selectionId) => {
+    if (!isLoggedIn) {
+      openLoginModal();
+      return;
+    }
+
     setSelectedBet({
       runner,
       type,

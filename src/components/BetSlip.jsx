@@ -41,6 +41,8 @@ const BetSlip = () => {
     }
   };
 
+  if (!isLoggedIn) return null;
+
   return (
     <div className="bg-white border border-gray-300">
       <div className="bg-[#243a48] text-white text-[13px] font-bold py-2 px-3 flex justify-between items-center">
@@ -48,11 +50,7 @@ const BetSlip = () => {
         <button onClick={fetchBets} className="text-xs text-gray-300 hover:text-white underline cursor-pointer">Refresh</button>
       </div>
       
-      {!isLoggedIn ? (
-        <div className="p-6 text-center text-[11px] text-gray-600">
-          Please login to view your bets.
-        </div>
-      ) : isLoading ? (
+      {isLoading ? (
         <div className="p-6 text-center text-[11px] text-gray-600">
           Loading bets...
         </div>
