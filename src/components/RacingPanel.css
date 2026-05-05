@@ -10,25 +10,34 @@
   margin-bottom: 0;
 }
 
-.country-header {
-  background: #dcdcdc; /* Theme grey header */
-  height: 32px;
+.racing-tabs-header {
+  background: #2c3f4d; /* Dark theme header */
+  padding: 4px 10px 0 10px;
   display: flex;
-  align-items: center;
+  gap: 2px;
   border-bottom: 1px solid #ccc;
 }
 
-.country-tab {
-  background: #2c3f4d; /* Theme dark blue header */
+.racing-tab-btn {
+  background: transparent;
   color: #fff;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  padding: 0 15px;
-  font-weight: 700;
+  border: none;
+  padding: 6px 12px;
   font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
   text-transform: uppercase;
-  letter-spacing: 0.5px;
+  border-radius: 4px 4px 0 0;
+  transition: all 0.2s;
+}
+
+.racing-tab-btn.active {
+  background: #fff;
+  color: #1e1e1e;
+}
+
+.racing-tab-btn:hover:not(.active) {
+  background: rgba(255, 255, 255, 0.1);
 }
 
 .tracks-list {
@@ -39,9 +48,14 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 8px 12px;
-  border-bottom: 1px solid #e1e1e1;
-  min-height: 44px;
+  padding: 10px 12px;
+  border-bottom: 1px solid #d1d1d1;
+  min-height: 48px;
+  background: #f6f6f6; /* Light grey background from image */
+}
+
+.track-row:hover {
+  background: #ededed;
 }
 
 .track-row:last-child {
@@ -51,29 +65,21 @@
 .track-info {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
 }
 
 .tv-icon {
-  width: 18px;
-  height: 15px;
-  background: #3498db;
-  border-radius: 2px;
+  width: 16px;
+  height: 16px;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 1px 1px rgba(0,0,0,0.1);
-  border: 1px solid #2980b9;
 }
 
 .track-name {
-  color: #0070c9; /* Theme blue link color */
+  color: #1e1e1e; /* Dark text from image */
   font-size: 13px;
-  font-weight: 700;
-}
-
-.track-row:hover .track-name {
-  text-decoration: underline;
+  font-weight: 500;
 }
 
 .event-times {
@@ -83,21 +89,25 @@
 }
 
 .time-btn {
-  background: #72bbef; /* Theme 'Back' odds color */
-  border: 1px solid #5da9dd;
-  border-radius: 3px;
-  padding: 3px 8px;
-  font-size: 11px;
+  background: #9b9ba4; /* Grey background for inactive */
+  border: none;
+  border-radius: 4px;
+  padding: 4px 10px;
+  font-size: 13px;
   font-weight: 700;
-  color: #1e1e1e;
+  color: #1e1e1e; /* Dark text on grey */
   cursor: pointer;
-  min-width: 50px;
+  min-width: 55px;
   transition: all 0.2s;
 }
 
+.time-btn.active {
+  background: #000078; /* Deep blue for active/next */
+  color: #fff;
+}
+
 .time-btn:hover {
-  background: #fff;
-  border-color: #72bbef;
+  opacity: 0.8;
 }
 
 .racing-loading, .racing-no-data {
