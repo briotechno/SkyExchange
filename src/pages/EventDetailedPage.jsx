@@ -15,7 +15,7 @@ import { useRatePolling } from '../hooks/useRatePolling';
 import { useSnackbarStore } from '../store/snackbarStore';
 
 const EventDetailedPage = () => {
-  const { sport, matchId } = useParams();
+  const { sport, matchId, eventId } = useParams();
   const navigate = useNavigate();
   const { loginToken, isLoggedIn } = useAuthStore();
   const openLoginModal = useUIStore(state => state.openLoginModal);
@@ -207,7 +207,12 @@ const EventDetailedPage = () => {
           <div className="p-4 flex-1 overflow-y-auto">
             {/* Dynamic Market Rendering */}
             {(() => {
-              const eventList = Object.values(gameData?.events || {});
+              const isRacing = sport === 'horse-racing' || sport === 'greyhound-racing';
+              let eventList = Object.values(gameData?.events || {});
+              
+              if (isRacing && eventId) {
+                eventList = eventList.filter(e => e.eid?.toString() === eventId.toString());
+              }
               
               // Group Fancy markets to show them together at the bottom or top
               const fancyMarkets = eventList.filter(e => e.Type === 'FANCY');

@@ -51,8 +51,8 @@ function App() {
         <Route path="/full-market-football" element={<FullMarketFootballPage />} />
         <Route path="/full-market-tennis" element={<FullMarketTennisPage />} />
         <Route path="/full-market-horse-racing" element={<FullMarketHorseRacingPage />} />
-        <Route path="/event-detail/:matchId" element={<EventDetailedPage />} />
-        <Route path="/:sport/:matchId" element={<EventDetailedPage />} />
+        <Route path="/event-detail/:matchId/:eventId?" element={<EventDetailedPage />} />
+        <Route path="/:sport/:matchId/:eventId?" element={<EventDetailedPage />} />
         <Route path="/sports" element={<SportsPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/signup" element={<SignupPage />} />

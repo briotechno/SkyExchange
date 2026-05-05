@@ -5,6 +5,7 @@ import LeftSidebar from './LeftSidebar';
 import BetSlip from './BetSlip';
 import Footer from './Footer';
 import { marketController } from '../controllers';
+import RacingPanel from './RacingPanel';
 
 const extractOdd = (runner) => {
   if (!runner) return { back: '--', lay: '--' };
@@ -291,16 +292,20 @@ function SportPageWithLayout({
                 </div>
               </div>
 
-              <div className={`sports-table-head desktop-grid ${sport === 'Tennis' ? 'tennis-grid' : ''}`}>
-                <div className="col-event">Event</div>
-                <div className="col-odds-1" style={{ justifyContent: 'center', fontWeight: 'bold' }}>1</div>
-                {sport !== 'Tennis' && <div className="col-odds-1" style={{ justifyContent: 'center', fontWeight: 'bold' }}>X</div>}
-                <div className="col-odds-1" style={{ justifyContent: 'center', fontWeight: 'bold' }}>2</div>
-                <div className="col-expand"></div>
-              </div>
+              {sport !== 'Horse Racing' && sport !== 'Greyhound Racing' && (
+                <div className={`sports-table-head desktop-grid ${sport === 'Tennis' ? 'tennis-grid' : ''}`}>
+                  <div className="col-event">Event</div>
+                  <div className="col-odds-1" style={{ justifyContent: 'center', fontWeight: 'bold' }}>1</div>
+                  {sport !== 'Tennis' && <div className="col-odds-1" style={{ justifyContent: 'center', fontWeight: 'bold' }}>X</div>}
+                  <div className="col-odds-1" style={{ justifyContent: 'center', fontWeight: 'bold' }}>2</div>
+                  <div className="col-expand"></div>
+                </div>
+              )}
 
               <div id="eventlistData">
-                {matches.length > 0 ? (
+                {sport === 'Horse Racing' || sport === 'Greyhound Racing' ? (
+                  <RacingPanel sportType={sport} />
+                ) : matches.length > 0 ? (
                   matches.map((m) => (
                     <MatchRow key={m.id} match={m} odds={odds} sport={sport} />
                   ))

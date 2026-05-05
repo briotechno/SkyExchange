@@ -428,6 +428,31 @@ This document serves as the high-fidelity specification for the Betting Platform
 - **Request:** `{"LoginToken":"..."}`
 - **Response:** `{"error":"0", "url":"https://sports-v3.mysportsfeed.io/auth?token=..."}`
 
+### 65. Racing Data ✅
+**POST** `/racingdata`
+- **Description:** Get live racing data for Horse and Greyhound Racing.
+- **Request:** `{"type": "Horse Racing"}` (Values: `"Horse Racing"`, `"Greyhound Racing"`)
+- **Response Example:**
+  ```json
+  [
+    {
+      "DateTime": "05-05-2026 13:18:00",
+      "Game_name": "Horsham (AUS) 5th May",
+      "Type": "Greyhound Racing",
+      "Event_Id": "35568661",
+      "gid": "19021",
+      "Country": "AU",
+      "Events": [
+        {
+          "Eid": "418161",
+          "Event_name": "R11 410m Gr5",
+          "EventTime": "05-05-2026 13:18:00"
+        }
+      ]
+    }
+  ]
+  ```
+
 ---
 
 ## 🎁 7. OFFERS APIs

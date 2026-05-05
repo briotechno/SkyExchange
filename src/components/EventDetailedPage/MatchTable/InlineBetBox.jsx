@@ -59,7 +59,10 @@ const InlineBetBox = ({ selection, matchId, onCancel, onSuccess, sport }) => {
     try {
       const market = selection.marketData;
       const mType = market?.Type?.toUpperCase() || 'ODDS';
-      const isRacing = sport?.toLowerCase() === 'horse racing' || sport?.toLowerCase() === 'greyhound racing';
+      const isRacing = sport?.toLowerCase() === 'horse racing' || 
+                       sport?.toLowerCase() === 'greyhound racing' ||
+                       sport?.toLowerCase() === 'horse-racing' ||
+                       sport?.toLowerCase() === 'greyhound-racing';
 
       const common = {
         LoginToken: loginToken,

@@ -17,4 +17,5 @@ export const marketController = {
   getNews: (token = '7034X2N0GES6JSmqnVZneMgKWhvrYOGPUwoGnHsGNVCM ') => fetchAPI('/news', { LoginToken: token }),
   toggleFavourite: (loginToken, eid) => fetchAPI('/favourite', { LoginToken: loginToken, Eid: eid }),
   getOpenTv: (loginToken, eventId) => fetchAPI('/opentv', { LoginToken: loginToken, Event_Id: eventId }),
+  getRacingData: async (type) => fetchAPI('/racingdata', { type }),
 };
