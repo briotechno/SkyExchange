@@ -3,36 +3,39 @@ import { useAuthStore } from '../../../store/authStore';
 import { bettingController } from '../../../controllers';
 import { userController } from '../../../controllers/user/userController';
 import { useSnackbarStore } from '../../../store/snackbarStore';
+import { useBettingStore } from '../../../store/bettingStore';
 
 const InlineBetBox = ({ selection, matchId, onCancel, onSuccess, sport }) => {
   const { loginToken } = useAuthStore();
   const showSnackbar = useSnackbarStore(state => state.show);
+  const { stakes: globalStakes, setStakes: setGlobalStakes } = useBettingStore();
   const [stake, setStake] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [acceptAnyOdds, setAcceptAnyOdds] = useState(true);
-  const [stakes, setStakes] = useState([100, 200, 500, 1000, 5000, 10000]); // Default fallback stakes
 
   useEffect(() => {
     if (loginToken) {
       userController.getStakeButtons(loginToken).then((res) => {
         if (res && typeof res === 'object') {
-          const stakeValues = [];
+          const stakeData = [];
           for (let i = 1; i <= 6; i++) {
             const item = res[i.toString()] || res[i];
-            if (item && item.Btnval) {
-              const val = parseInt(item.Btnval);
-              if (!isNaN(val)) stakeValues.push(val);
+            if (item) {
+              stakeData.push({ 
+                label: item.Btnname || item.btnname || `S${i}`, 
+                value: parseInt(item.Btnval || item.btnval || '0') 
+              });
             }
           }
-          if (stakeValues.length > 0) {
-            setStakes(stakeValues);
+          if (stakeData.length > 0) {
+            setGlobalStakes(stakeData);
           }
         }
       }).catch(err => {
         console.error('Failed to fetch stake buttons:', err);
       });
     }
-  }, [loginToken]);
+  }, [loginToken, setGlobalStakes]);
 
   const isBack = selection?.type === 'back' || selection?.type === 'yes';
   const bgColor = isBack ? '#d0e6f6' : '#f5d5d6';
@@ -255,10 +258,10 @@ const InlineBetBox = ({ selection, matchId, onCancel, onSuccess, sport }) => {
 
       {/* Bottom Row */}
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: '6px', padding: '0 10px 10px 10px' }}>
-        {stakes.map((val) => (
+        {globalStakes.map((stakeObj, idx) => (
           <button
-            key={val}
-            onClick={() => handleStakeClick(val)}
+            key={idx}
+            onClick={() => handleStakeClick(stakeObj.value)}
             style={{
               backgroundColor: '#fdfdfd',
               border: '1px solid #c9c9c9',
@@ -272,7 +275,7 @@ const InlineBetBox = ({ selection, matchId, onCancel, onSuccess, sport }) => {
               boxShadow: '0 1px 1px rgba(0,0,0,0.05)',
               textAlign: 'center'
             }}>
-            {val}
+            {stakeObj.value}
           </button>
         ))}
       </div>

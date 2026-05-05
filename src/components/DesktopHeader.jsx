@@ -3,8 +3,8 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { authController, userController, marketController } from '../controllers';
 import { useAuthStore } from '../store/authStore';
 import { useSnackbarStore } from '../store/snackbarStore';
-
 import { useUIStore } from '../store/uiStore';
+import EditStakeModal from './EditStakeModal';
 
 function DesktopHeader() {
   const openLoginModal = useUIStore(state => state.openLoginModal);
@@ -20,6 +20,7 @@ function DesktopHeader() {
   const [showSearchResults, setShowSearchResults] = useState(false);
   const [isAccountMenuOpen, setIsAccountMenuOpen] = useState(false);
   const [isBalanceModalOpen, setIsBalanceModalOpen] = useState(false);
+  const [isEditStakeModalOpen, setIsEditStakeModalOpen] = useState(false);
   const [matchCounts, setMatchCounts] = useState({
     Cricket: 0,
     Football: 0,
@@ -565,7 +566,7 @@ function DesktopHeader() {
             <ul className="setting-wrap" style={{ display: 'flex', alignItems: 'center', listStyle: 'none', margin: 0, padding: 0 }}>
               <li className="time_zone" style={{ display: 'flex', alignItems: 'center', whiteSpace: 'nowrap' }}><span>Time Zone :</span> GMT+5:30</li>
               <li style={{ display: 'flex', alignItems: 'center' }}>
-                <a className="setting" style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', whiteSpace: 'nowrap' }}>
+                <a className="setting" onClick={() => setIsEditStakeModalOpen(true)} style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', whiteSpace: 'nowrap' }}>
                   Setting <img src="/images/transparent.gif" alt="" style={{ marginLeft: '5px', display: 'inline-block' }} />
                 </a>
               </li>
@@ -573,6 +574,11 @@ function DesktopHeader() {
           </div>
         </div>
       </div>
+
+      <EditStakeModal 
+        isOpen={isEditStakeModalOpen} 
+        onClose={() => setIsEditStakeModalOpen(false)} 
+      />
       <style>{`
         .red-gradient-btn {
           background: linear-gradient(-180deg, rgb(247, 36, 36), rgb(187, 28, 0)) !important;
@@ -583,6 +589,25 @@ function DesktopHeader() {
         .red-gradient-btn:hover {
           opacity: 0.9;
           color: #fff !important;
+        }
+        .btn-login, .btn-signup {
+          display: flex !important;
+          align-items: center;
+          justify-content: center;
+          gap: 5px;
+          height: 25px !important;
+          line-height: 25px !important;
+          padding: 0 8px !important;
+          box-sizing: border-box !important;
+          overflow: hidden !important;
+        }
+        .icon-login {
+          width: 10px !important;
+          height: 11px !important;
+          display: inline-block !important;
+          background: url('data:image/svg+xml,<svg width="10" height="11" xmlns="http://www.w3.org/2000/svg"><path d="M5.71 7.706l1.432-1.604H1.778V4.898h5.39L5.71 3.294l.781-.86L9.278 5.5 6.49 8.565l-.78-.86zM1.12 0C.825 0 .564.124.339.372a1.24 1.24 0 0 0-.339.86v8.536c0 .325.113.611.339.86.225.248.486.372.78.372H8.88c.295 0 .556-.124.781-.372a1.24 1.24 0 0 0 .339-.86V7.333H8.88v2.435H1.12V1.232h7.76v2.435H10V1.232a1.24 1.24 0 0 0-.339-.86C9.436.124 9.175 0 8.881 0H1.12z" fill="%23FFF" fill-rule="evenodd"/></svg>') no-repeat !important;
+          margin: 0 !important;
+          position: static !important;
         }
       `}</style>
     </>
