@@ -232,6 +232,28 @@ function DesktopHeader() {
     return false;
   };
 
+  const openOverlay = useUIStore(state => state.openOverlay);
+
+  const handlePremiumSportsbook = async (e) => {
+    e.preventDefault();
+    if (!isLoggedIn) {
+      openLoginModal();
+      return;
+    }
+
+    try {
+      const res = await marketController.getSportsbook(loginToken);
+      if (res && res.error === '0' && res.url) {
+        openOverlay(res.url, 'Premium Sportsbook');
+      } else {
+        showSnackbar(res?.msg || 'Failed to open sportsbook', 'error');
+      }
+    } catch (err) {
+      console.error(err);
+      showSnackbar('Error opening sportsbook', 'error');
+    }
+  };
+
   return (
     <>
       <style>
@@ -524,11 +546,21 @@ function DesktopHeader() {
               <li><Link to="/horse-racing" className={isActive('/horse-racing') ? 'active-menu' : ''}><span className="tag-live"><strong></strong>{matchCounts['Horse Racing']}</span>Horse Racing</Link></li>
               <li><Link to="/greyhound-racing" className={isActive('/greyhound-racing') ? 'active-menu' : ''}><span className="tag-live"><strong></strong>{matchCounts['Greyhound Racing']}</span>Greyhound Racing</Link></li>
               <li>
-                <Link id="menu_Casino" to="/casino" className={`casino tag-new ${isActive('/casino') ? 'active-menu' : ''}`}>
+                <Link 
+                  id="menu_Casino" 
+                  to={isLoggedIn ? "/casino" : "#"} 
+                  className={`casino tag-new ${isActive('/casino') ? 'active-menu' : ''}`}
+                  onClick={(e) => {
+                    if (!isLoggedIn) {
+                      e.preventDefault();
+                      openLoginModal();
+                    }
+                  }}
+                >
                   Casino
                 </Link>
               </li>
-              <li><a href="#" className="red-gradient-btn" onClick={(e) => { e.preventDefault(); openLoginModal(); }}>Premium sportBook</a></li>
+              <li><a href="#" className="red-gradient-btn" onClick={handlePremiumSportsbook}>Premium sportBook</a></li>
             </ul>
             <ul className="setting-wrap" style={{ display: 'flex', alignItems: 'center', listStyle: 'none', margin: 0, padding: 0 }}>
               <li className="time_zone" style={{ display: 'flex', alignItems: 'center', whiteSpace: 'nowrap' }}><span>Time Zone :</span> GMT+5:30</li>

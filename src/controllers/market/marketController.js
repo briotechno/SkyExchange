@@ -18,4 +18,5 @@ export const marketController = {
   toggleFavourite: (loginToken, eid) => fetchAPI('/favourite', { LoginToken: loginToken, Eid: eid }),
   getOpenTv: (loginToken, eventId) => fetchAPI('/opentv', { LoginToken: loginToken, Event_Id: eventId }),
   getRacingData: async (type) => fetchAPI('/racingdata', { type }),
+  getSportsbook: async (loginToken) => fetchAPI('/sportsbook', { LoginToken: loginToken }),
 };
